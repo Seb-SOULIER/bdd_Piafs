@@ -42,9 +42,9 @@ class RegistrationController extends AbstractController
         $errors = $validator->validate($user);
 
         if(count($errors)>0){
-            return $this->json(
-                $errors[0]->getMessage()
-            );
+            return $this->json([
+                "error" => $errors[0]->getMessage()
+            ]);
         }
 
         $entityManager->persist($user);
