@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ApiLoginController extends AbstractController
@@ -78,6 +79,41 @@ class ApiLoginController extends AbstractController
             'error'=>'Il n y a pas de compte avec ce mail : '.$data['email'] 
         ]);
     }
+
+    #[Route('/restoreLogin', name: 'restore_login')]
+    public function restoreLogin(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        ): JsonResponse
+    {   
+        $data = json_decode($request->getContent(), true);
+
+        $user = $userRepository->findOneBy(['email'=>$data['email']]);
+
+        if($user){
+            if($user->getRestoreCode()){
+                if($user->getRestoreCode() === $data['restoreCode']){
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $data['password']
+                        )
+                    );
+                    $user->setRestoreCode(null);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+                    return $this->json([
+                        'success'=>'OK'
+                    ]);     
+                }
+            }
+        }
+        return $this->json([
+            'error'=>'Mot de passe pas reinitialise'
+        ]);
+    }    
 
     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(EntityManagerInterface $entityManager)
