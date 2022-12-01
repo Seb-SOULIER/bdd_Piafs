@@ -43,7 +43,7 @@ class ApiLoginController extends AbstractController
         ]);
     }
 
-    #[Route('/sendRestoreLogin', name: 'send_restore_login')]
+    #[Route('/api/sendRestoreLogin', name: 'send_restore_login')]
     public function sendRestoreLogin(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -80,7 +80,7 @@ class ApiLoginController extends AbstractController
         ]);
     }
 
-    #[Route('/restoreLogin', name: 'restore_login')]
+    #[Route('/api/restoreLogin', name: 'restore_login')]
     public function restoreLogin(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
