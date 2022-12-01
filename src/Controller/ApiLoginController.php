@@ -71,7 +71,7 @@ class ApiLoginController extends AbstractController
             $mailer->send($email);
 
             return $this->json([
-                'success'=>$data['email']
+                'user'=>$data['email']
             ]);
         }
         
