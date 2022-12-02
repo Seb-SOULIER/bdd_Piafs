@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
@@ -30,8 +32,13 @@ class RegistrationController extends AbstractController
         $user->setValidToken(null);
         $user->setLastname($data['lastname']);
         $user->setFirstname($data['firstname']);
-        // $user->setBirthdate($data['birthdate']);
-        $user->setAvatar(null);
+        $mydate = getDate(strtotime($data['birthdate']));
+
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        
+        $user->setBirthdate($date);
+        $user->setAvatar($data['avatar']);
         $user->setAddress($data['address']);
         $user->setZipcode($data['zipcode']);
         $user->setCity($data['city']);
