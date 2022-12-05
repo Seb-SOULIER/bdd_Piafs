@@ -99,4 +99,12 @@ class UserController extends AbstractController
             'message'=>'non'
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
+
+    #[Route('/recup/listuser', name: 'recup_listUser')]
+    public function recupListUser(EntityManagerInterface $entityManager): JsonResponse
+    {
+        return $this->json([
+            'message'=>'list'
+        ], JsonResponse::HTTP_UNAUTHORIZED);
+    }
 }
