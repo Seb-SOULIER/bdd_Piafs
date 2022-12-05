@@ -2,16 +2,18 @@
 
 namespace App\Controller;
 
+use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 
 class UserController extends AbstractController
 {
-    #[Route('/recup/user', name: 'api_user')]
+    #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
         $user= $this->getUser();
@@ -59,5 +61,42 @@ class UserController extends AbstractController
             'user'  => $user,
             'profil' => $profil
         ]);
+    }
+
+    #[Route('/valid/user', name: 'valid_user')]
+    public function validUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
+    {
+        $user= $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+
+        if ($user->getRoles() === ['ROLE_ADMIN']){
+            $userValid = $userRepository->findOneBy(['email'=>$data['email']]);
+
+            $userValid-> setIsActive(true);
+
+            $mydate = getDate(strtotime($data['dateValid']));
+            $dateValid = new \DateTime();
+            date_date_set($dateValid, $mydate['year'], $mydate['mon'], $mydate['mday']);
+    
+            $userValid->setActiveAt($dateValid);
+
+            $entityManager->persist($userValid);
+            $entityManager->flush();
+ 
+            return $this->json([
+                'message' => 'Profil validé',
+            ], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
+        return $this->json([
+            'message'=>'non'
+        ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 }
