@@ -100,11 +100,18 @@ class UserController extends AbstractController
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
-    #[Route('/recup/listuser', name: 'recup_listUser')]
-    public function recupListUser(EntityManagerInterface $entityManager): JsonResponse
+    #[Route('/listuser/admin', name: 'listUser')]
+    public function recupListUser(): JsonResponse
     {
+        $user= $this->getUser();
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ], JsonResponse::HTTP_UNAUTHORIZED);
+        }
+
         return $this->json([
-            'message'=>'list'
+            'message'=>$user
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 }
