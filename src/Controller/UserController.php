@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +12,7 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'api_user')]
-    public function recupUser(): JsonResponse
+    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
         $user= $this->getUser();
         if (null === $user) {
@@ -26,9 +27,21 @@ class UserController extends AbstractController
             ], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
-        $profil=false;
-        if ($user->isIsActive() === false) {
+        if($user->getActiveAt()){
+            if($user->getActiveAt() > new Date()){
+                $user->setIsActive(true);
+            }else{
+                $user->setIsActive(false);
+            }
+        }else{
+            $user->setIsActive(false);
+        }
+        $entityManager->persist($user);
+        $entityManager->flush();
 
+        $profil=false;
+
+        if ($user->isIsActive() === false) {
             if (
                 $user->getLastname() and 
                 $user->getFirstname() and
@@ -36,7 +49,7 @@ class UserController extends AbstractController
                 $user->getAddress() and
                 $user->getZipcode() and
                 $user->getCity() and
-                $user-> getPhone()
+                $user->getPhone()
             ){
                 $profil = true;
             }

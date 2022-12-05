@@ -71,6 +71,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $restoreCode = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $activeAt = null;
+
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
@@ -315,6 +318,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRestoreCode(?string $restoreCode): self
     {
         $this->restoreCode = $restoreCode;
+
+        return $this;
+    }
+
+    public function getActiveAt(): ?\DateTimeInterface
+    {
+        return $this->activeAt;
+    }
+
+    public function setActiveAt(?\DateTimeInterface $activeAt): self
+    {
+        $this->activeAt = $activeAt;
 
         return $this;
     }
