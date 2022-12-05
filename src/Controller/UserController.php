@@ -26,8 +26,25 @@ class UserController extends AbstractController
             ], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
+        $profil=false;
+        if ($user->isIsActive() === false) {
+
+            if (
+                $user->getLastname() and 
+                $user->getFirstname() and
+                $user->getBirthdate() and
+                $user->getAddress() and
+                $user->getZipcode() and
+                $user->getCity() and
+                $user-> getPhone()
+            ){
+                $profil = true;
+            }
+        }
+
         return $this->json([
             'user'  => $user,
+            'profil' => $profil
         ]);
     }
 }
