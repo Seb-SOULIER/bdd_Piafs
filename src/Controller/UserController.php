@@ -101,7 +101,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/listuser/admin', name: 'listUser')]
-    public function recupListUser(): JsonResponse
+    public function recupListUser(Request $request, UserRepository $userRepository): JsonResponse
     {
         $user= $this->getUser();
         if (null === $user) {
@@ -109,9 +109,13 @@ class UserController extends AbstractController
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ], JsonResponse::HTTP_UNAUTHORIZED);
         }
+        if($user->getRoles()=== ['ROLE_ADMIN']){
+            $listUser = $userRepository->findAll();
+            return $this->json($listUser);
+        }
 
         return $this->json([
-            'message'=>$user
+            'message'=>'erreur'
         ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 }
