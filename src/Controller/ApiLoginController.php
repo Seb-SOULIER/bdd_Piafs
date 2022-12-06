@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\UserRepository;
+use App\Service\ActiveUser;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -17,8 +18,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiLoginController extends AbstractController
 {
     #[Route('/api/login', name: 'api_login')]
-    public function index(EntityManagerInterface $entityManager): JsonResponse
+    public function index(EntityManagerInterface $entityManager, ActiveUser $activeUser): JsonResponse
     {
+        $activeUser->inactiveUser();
+
         $user= $this->getUser();
         if (null === $user) {
             return $this->json([
