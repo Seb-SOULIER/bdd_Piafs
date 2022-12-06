@@ -115,7 +115,6 @@ class UserController extends AbstractController
         if ($data){
             $select = $data['select'];
             $select2 = $data['select2'];
-
             if($user->getRoles() === ['ROLE_ADMIN']){
                 if ($select === 'Administrateurs'){
                     if($select2 === 'Actifs'){
@@ -123,7 +122,7 @@ class UserController extends AbstractController
                     }elseif($select2 === 'Inactifs'){
                         $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',false);
                     }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]','');
+                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',null);
                     }
                 }elseif($select === 'Intervenants'){
                     if($select2 === 'Actifs'){
@@ -131,7 +130,7 @@ class UserController extends AbstractController
                     }elseif($select2 === 'Inactifs'){
                         $listUser = $userRepository->findAllUser('["ROLE_INTER"]',false);
                     }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]','');
+                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]',null);
                     }
                 }elseif($select === 'Utilisateurs'){
                     if($select2 === 'Actifs'){
@@ -139,7 +138,7 @@ class UserController extends AbstractController
                     }elseif($select2 === 'Inactifs'){
                         $listUser = $userRepository->findAllUser('["ROLE_USER"]',false);
                     }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]','');
+                        $listUser = $userRepository->findAllUser('["ROLE_USER"]',null);
                     }
                 }else{
                     if($select2 === 'Actifs'){
@@ -147,7 +146,7 @@ class UserController extends AbstractController
                     }elseif($select2 === 'Inactifs'){
                         $listUser = $userRepository->findAllUser('',false);
                     }else{
-                        $listUser = $userRepository->findAll();
+                        $listUser = $userRepository->findAllUser('',null);
                     }
                 }
                 return $this->json($listUser);
