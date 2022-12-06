@@ -115,6 +115,7 @@ class UserController extends AbstractController
         if ($data){
             $select = $data['select'];
             $select2 = $data['select2'];
+
             if($user->getRoles() === ['ROLE_ADMIN']){
                 if ($select === 'Administrateurs'){
                     if($select2 === 'Actifs'){

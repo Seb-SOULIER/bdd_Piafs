@@ -64,11 +64,14 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
             return $query->getQuery()->getResult();
         }elseif(!$roles && $actif){
-            if($actif==='true'){$actifBool = true;}
-            else{$actifBool = false;}
+            if($actif === 'true'){
+                $actifBool1 = true;
+            }else{
+                $actifBool1 = false;
+            }
             $query = $this->createQueryBuilder('u')
-                ->where('u.is_active = :bool')
-                ->setParameter('bool', $actifBool)
+                ->where('u.isActive = :bool1')
+                ->setParameter('bool1', $actifBool1)
                 ->orderBy('u.firstname', 'ASC')
             ;
             return $query->getQuery()->getResult();
@@ -80,8 +83,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
             return $query->getQuery()->getResult();
         }else{  // $roles and $actifs
-            if($actif==='true'){$actifBool = true;}
-            else{$actifBool = false;}
+            if($actif === 'true'){
+                $actifBool = true;
+            }else{
+                $actifBool = false;
+            }
             $query = $this->createQueryBuilder('u')
                 ->where('u.isActive = :bool')
                 ->andWhere('u.roles LIKE :val')
