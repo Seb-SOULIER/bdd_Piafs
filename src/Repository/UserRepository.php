@@ -56,21 +56,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->save($user, true);
     }
 
-    public function findAllUser(?string $roles, ?bool $actif)
+    public function findAllUser(?string $roles, ?string $actif)
     {
-        if (!$roles and !$actif) {
+        if (!$roles && !$actif) {
             $query = $this->createQueryBuilder('u')
                 ->orderBy('u.firstname', 'ASC')
             ;
             return $query->getQuery()->getResult();
-        }elseif(!$roles and $actif){
+        }elseif(!$roles && $actif){
+            if($actif==='true'){$actifBool = true;}
+            else{$actifBool = false;}
             $query = $this->createQueryBuilder('u')
-                ->where('u.isActive = :bool')
-                ->setParameter('bool', $actif)
+                ->where('u.is_active = :bool')
+                ->setParameter('bool', $actifBool)
                 ->orderBy('u.firstname', 'ASC')
             ;
             return $query->getQuery()->getResult();
-        }elseif($roles and !$actif) {
+        }elseif($roles && !$actif) {
             $query = $this->createQueryBuilder('u')
                 ->where('u.roles LIKE :val')
                 ->setParameter('val', $roles)
@@ -78,10 +80,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ;
             return $query->getQuery()->getResult();
         }else{  // $roles and $actifs
+            if($actif==='true'){$actifBool = true;}
+            else{$actifBool = false;}
             $query = $this->createQueryBuilder('u')
                 ->where('u.isActive = :bool')
                 ->andWhere('u.roles LIKE :val')
-                ->setParameter('bool', $actif)
+                ->setParameter('bool', $actifBool)
                 ->setParameter('val', $roles)
                 ->orderBy('u.firstname', 'ASC')
             ;

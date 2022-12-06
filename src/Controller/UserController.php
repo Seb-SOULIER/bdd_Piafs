@@ -118,35 +118,35 @@ class UserController extends AbstractController
             if($user->getRoles() === ['ROLE_ADMIN']){
                 if ($select === 'Administrateurs'){
                     if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',true);
+                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]','true');
                     }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',false);
+                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]','false');
                     }else{
                         $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',null);
                     }
                 }elseif($select === 'Intervenants'){
                     if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]',true);
+                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]','true');
                     }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]',false);
+                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]','false');
                     }else{
                         $listUser = $userRepository->findAllUser('["ROLE_INTER"]',null);
                     }
                 }elseif($select === 'Utilisateurs'){
                     if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]',true);
+                        $listUser = $userRepository->findAllUser('["ROLE_USER"]','true');
                     }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]',false);
+                        $listUser = $userRepository->findAllUser('["ROLE_USER"]','false');
                     }else{
                         $listUser = $userRepository->findAllUser('["ROLE_USER"]',null);
                     }
                 }else{
                     if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('',true);
+                        $listUser = $userRepository->findAllUser(null,'true');
                     }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('',false);
+                        $listUser = $userRepository->findAllUser(null,'false');
                     }else{
-                        $listUser = $userRepository->findAllUser('',null);
+                        $listUser = $userRepository->findAllUser(null,null);
                     }
                 }
                 return $this->json($listUser);
