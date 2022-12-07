@@ -93,7 +93,7 @@ class UserController extends AbstractController
  
             return $this->json([
                 'message' => 'success',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
         return $this->json([
