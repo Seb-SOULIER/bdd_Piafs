@@ -21,13 +21,13 @@ class UserController extends AbstractController
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
         if ($user->getValidToken() < new DateTime()){
             return $this->json([
                 'message' => 'Merci de vous reconnecter',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
         if($user->getActiveAt()){
@@ -73,7 +73,7 @@ class UserController extends AbstractController
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
 
@@ -98,7 +98,7 @@ class UserController extends AbstractController
 
         return $this->json([
             'message'=>'non'
-        ], JsonResponse::HTTP_UNAUTHORIZED);
+        ]);
     }
 
     #[Route('/listuser/admin', name: 'listUser')]
@@ -108,7 +108,7 @@ class UserController extends AbstractController
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
         $data = json_decode($request->getContent(), true);
@@ -156,6 +156,39 @@ class UserController extends AbstractController
 
         return $this->json([
             'message'=>'erreur'
-        ], JsonResponse::HTTP_UNAUTHORIZED);
+        ]);
+        // , JsonResponse::HTTP_UNAUTHORIZED);
+    }
+
+
+    #[Route('/role/user', name: 'role_user')]
+    public function roleUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
+    {
+        $user= $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+
+        if ($user->getRoles() === ['ROLE_ADMIN']){
+            $userValid = $userRepository->findOneBy(['email'=>$data['email']]);
+
+            $userValid->setRoles([$data['role']]);
+
+            $entityManager->persist($userValid);
+            $entityManager->flush();
+ 
+            return $this->json([
+                'message' => 'success',
+            ]);
+        }
+
+        return $this->json([
+            'message'=>'non'
+        ]);
     }
 }
