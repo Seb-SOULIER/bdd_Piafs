@@ -24,24 +24,6 @@ class UserController extends AbstractController
             ]);
         }
 
-        if ($user->getValidToken() < new DateTime()){
-            return $this->json([
-                'message' => 'Merci de vous reconnecter',
-            ]);
-        }
-
-        if($user->getActiveAt()){
-            if($user->getActiveAt() > new Date()){
-                $user->setIsActive(true);
-            }else{
-                $user->setIsActive(false);
-            }
-        }else{
-            $user->setIsActive(false);
-        }
-        $entityManager->persist($user);
-        $entityManager->flush();
-
         $profil=false;
 
         if ($user->isIsActive() === false) {
