@@ -34,8 +34,7 @@ class ActiveUser
                 }
             }
         $this->userEntityManager->persist($userOne);
+        $this->userEntityManager->flush();        
         }
-        
-    $this->userEntityManager->flush();        
     }
 }
