@@ -17,7 +17,7 @@ class UserController extends AbstractController
     #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
-        $user= $this->getUser();
+        $user = $this->getUser();
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
@@ -92,7 +92,7 @@ class UserController extends AbstractController
             $entityManager->flush();
  
             return $this->json([
-                'message' => 'Profil validé',
+                'message' => 'success',
             ], JsonResponse::HTTP_UNAUTHORIZED);
         }
 
