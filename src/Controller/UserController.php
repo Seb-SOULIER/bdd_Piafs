@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Children;
-use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ActiveUser;
 use DateTime;
@@ -17,15 +16,9 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
-    public function recupUser(Request $request, UserRepository $userRepository): JsonResponse
+    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
-        $user= $this->getUser();
-
-        // $data = json_decode($request->getContent(), true);
-     
-        // $user = new User;
-        // $user = $userRepository->findOneBy(['email'=>$data['email']]);
-
+        $user = $this->getUser();
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
@@ -33,6 +26,7 @@ class UserController extends AbstractController
         }
 
         $profil=false;
+
         if ($user->isIsActive() === false) {
             if (
                 $user->getLastname() and 
@@ -50,7 +44,7 @@ class UserController extends AbstractController
         return $this->json([
             'user'  => $user,
             'profil' => $profil
-        ], JsonResponse::HTTP_UNAUTHORIZED);
+        ]);
     }
 
     #[Route('/valid/user', name: 'valid_user')]
@@ -196,7 +190,7 @@ class UserController extends AbstractController
         $children = new Children();
         $children->setName($data['name']);
 
-        if($data['birthdate'] === "15"){
+        if($data['birthdate'] == "15"){
             $birthdate = new Date();
         }else{
             $mydate = getDate(strtotime($data['birthdate']));
