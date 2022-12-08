@@ -19,11 +19,12 @@ class UserController extends AbstractController
     #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(Request $request, UserRepository $userRepository): JsonResponse
     {
+        $user= $this->getUser();
+
+        // $data = json_decode($request->getContent(), true);
      
-        $data = json_decode($request->getContent(), true);
-     
-        $user = new User;
-        $user = $userRepository->findOneBy(['email'=>$data['email']]);
+        // $user = new User;
+        // $user = $userRepository->findOneBy(['email'=>$data['email']]);
 
         if (null === $user) {
             return $this->json([
