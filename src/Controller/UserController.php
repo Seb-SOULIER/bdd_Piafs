@@ -16,30 +16,32 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
-    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
+    public function recupUser(): JsonResponse
     {
-        $user = $this->getUser();
-        if (null === $user) {
-            return $this->json([
-                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ]);
-        }
+        // $user = $userRepository->findOneBy(['email'=>$data['email']]);
+        // $user = $this->getUser();
+
+        // if (null === $user) {
+        //     return $this->json([
+        //         'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+        //     ]);
+        // }
 
         $profil=false;
-
-        if ($user->isIsActive() === false) {
-            if (
-                $user->getLastname() and 
-                $user->getFirstname() and
-                $user->getBirthdate() and
-                $user->getAddress() and
-                $user->getZipcode() and
-                $user->getCity() and
-                $user->getPhone()
-            ){
-                $profil = true;
-            }
-        }
+        $user = 'coucou';
+        // if ($user->isIsActive() === false) {
+        //     if (
+        //         $user->getLastname() and 
+        //         $user->getFirstname() and
+        //         $user->getBirthdate() and
+        //         $user->getAddress() and
+        //         $user->getZipcode() and
+        //         $user->getCity() and
+        //         $user->getPhone()
+        //     ){
+        //         $profil = true;
+        //     }
+        // }
 
         return $this->json([
             'user'  => $user,
