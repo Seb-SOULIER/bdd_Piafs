@@ -76,13 +76,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $activeAt = null;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]
-    private Collection $childrens;
+    // #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]
+    // private Collection $childrens;
 
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
-        $this->childrens = new ArrayCollection();
+        // $this->childrens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -340,33 +340,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Children>
-     */
-    public function getChildrens(): Collection
-    {
-        return $this->childrens;
-    }
+    // /**
+    //  * @return Collection<int, Children>
+    //  */
+    // public function getChildrens(): Collection
+    // {
+    //     return $this->childrens;
+    // }
 
-    public function addChildren(Children $children): self
-    {
-        if (!$this->childrens->contains($children)) {
-            $this->childrens->add($children);
-            $children->setParent($this);
-        }
+    // public function addChildren(Children $children): self
+    // {
+    //     if (!$this->childrens->contains($children)) {
+    //         $this->childrens->add($children);
+    //         $children->setParent($this);
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
-    public function removeChildren(Children $children): self
-    {
-        if ($this->childrens->removeElement($children)) {
-            // set the owning side to null (unless already changed)
-            if ($children->getParent() === $this) {
-                $children->setParent(null);
-            }
-        }
+    // public function removeChildren(Children $children): self
+    // {
+    //     if ($this->childrens->removeElement($children)) {
+    //         // set the owning side to null (unless already changed)
+    //         if ($children->getParent() === $this) {
+    //             $children->setParent(null);
+    //         }
+    //     }
 
-        return $this;
-    }
+    //     return $this;
+    // }
 }

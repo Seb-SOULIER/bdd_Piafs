@@ -40,7 +40,7 @@ class UserController extends AbstractController
         }
 
         return $this->json([
-            // 'user'  => $user,
+            'user'  => $user,
             'profil' => $profil
         ]);
     }
