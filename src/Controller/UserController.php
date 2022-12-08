@@ -18,30 +18,28 @@ class UserController extends AbstractController
     #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(): JsonResponse
     {
-        // $user = $userRepository->findOneBy(['email'=>$data['email']]);
-        // $user = $this->getUser();
+        $user = $this->getUser();
 
-        // if (null === $user) {
-        //     return $this->json([
-        //         'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-        //     ]);
-        // }
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
 
         $profil=false;
-        $user = 'coucou';
-        // if ($user->isIsActive() === false) {
-        //     if (
-        //         $user->getLastname() and 
-        //         $user->getFirstname() and
-        //         $user->getBirthdate() and
-        //         $user->getAddress() and
-        //         $user->getZipcode() and
-        //         $user->getCity() and
-        //         $user->getPhone()
-        //     ){
-        //         $profil = true;
-        //     }
-        // }
+        if ($user->isIsActive() === false) {
+            if (
+                $user->getLastname() and 
+                $user->getFirstname() and
+                $user->getBirthdate() and
+                $user->getAddress() and
+                $user->getZipcode() and
+                $user->getCity() and
+                $user->getPhone()
+            ){
+                $profil = true;
+            }
+        }
 
         return $this->json([
             'user'  => $user,
