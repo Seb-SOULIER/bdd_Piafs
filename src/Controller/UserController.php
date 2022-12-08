@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Repository\UserRepository;
-use App\Service\ActiveUser;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +14,7 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
-    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
+    public function recupUser(Request $request): JsonResponse
     {
         $user = $this->getUser();
         if (null === $user) {
