@@ -190,9 +190,14 @@ class UserController extends AbstractController
         $children = new Children();
         $children->setName($data['name']);
 
-        $mydate = getDate(strtotime($data['birthdate']));
-        $birthdate = new \DateTime();
-        date_date_set($birthdate, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        if($data['birthdate'] == "15"){
+            $birthdate = new DateTime();
+        }else{
+            $mydate = getDate(strtotime($data['birthdate']));
+            $birthdate = new \DateTime();
+            date_date_set($birthdate, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        }
+        
         $children->setBirthdate($birthdate);
         $children->setParent($user);
 
