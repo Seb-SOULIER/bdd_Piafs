@@ -39,8 +39,35 @@ class UserController extends AbstractController
             }
         }
 
+        $childrenArray=[];
+        $childrens = $user->getChildrens();
+        foreach($childrens as $children){
+            array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
+        }
+
+
+        $userSend = [
+            'id'=>$user->getId(),
+            'email'=> $user->getEmail(),
+            'userIdentifier'=>$user->getEmail(),
+            'username'=>$user->getEmail(),
+            'roles'=> $user->getRoles(),
+            'lastname'=> $user->getLastname(),
+            'firstname'=> $user->getFirstname(),
+            'birthdate'=> $user->getBirthdate(),
+            'avatar'=> $user->getAvatar(),
+            'address'=> $user->getAddress(),
+            'zipcode'=>$user->getZipcode(),
+            'city'=>$user->getCity(),
+            'phone'=>$user->getPhone(),
+            'subcribeAt'=> $user->getSubcribeAt(),
+            'isActive'=> $user->isIsActive(),
+            'activeAt'=> $user->getActiveAt(),
+            'children'=>$childrenArray
+        ];
+
         return $this->json([
-            'user'  => $user,
+            'user'  => $userSend,
             'profil' => $profil
         ]);
     }
@@ -189,7 +216,7 @@ class UserController extends AbstractController
         $children->setName($data['name']);
 
         if($data['birthdate'] == "15"){
-            $birthdate = new Date();
+            $birthdate = new \DateTime();
         }else{
             $mydate = getDate(strtotime($data['birthdate']));
             $birthdate = new \DateTime();
@@ -202,8 +229,52 @@ class UserController extends AbstractController
         $entityManager->persist($children);
         $entityManager->flush();
 
+        $profil=false;
+
+        if ($user->isIsActive() === false) {
+            if (
+                $user->getLastname() and 
+                $user->getFirstname() and
+                $user->getBirthdate() and
+                $user->getAddress() and
+                $user->getZipcode() and
+                $user->getCity() and
+                $user->getPhone()
+            ){
+                $profil = true;
+            }
+        }
+
+        $childrenArray=[];
+        $childrens = $user->getChildrens();
+        foreach($childrens as $children){
+            array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
+        }
+
+
+        $userSend = [
+            'id'=>$user->getId(),
+            'email'=> $user->getEmail(),
+            'userIdentifier'=>$user->getEmail(),
+            'username'=>$user->getEmail(),
+            'roles'=> $user->getRoles(),
+            'lastname'=> $user->getLastname(),
+            'firstname'=> $user->getFirstname(),
+            'birthdate'=> $user->getBirthdate(),
+            'avatar'=> $user->getAvatar(),
+            'address'=> $user->getAddress(),
+            'zipcode'=>$user->getZipcode(),
+            'city'=>$user->getCity(),
+            'phone'=>$user->getPhone(),
+            'subcribeAt'=> $user->getSubcribeAt(),
+            'isActive'=> $user->isIsActive(),
+            'activeAt'=> $user->getActiveAt(),
+            'children'=>$childrenArray
+        ];
+
         return $this->json([
-            'message' => 'Success',
+            'user'  => $userSend,
+            'profil' => $profil
         ]);
     }
 }
