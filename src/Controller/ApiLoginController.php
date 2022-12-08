@@ -43,7 +43,7 @@ class ApiLoginController extends AbstractController
             'role' => $user->getRoles(),
             'token' => $token,
             'validToken'=>$validToken
-        ]);
+        ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     #[Route('/api/sendRestoreLogin', name: 'send_restore_login')]
