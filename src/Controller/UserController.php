@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Children;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ActiveUser;
 use DateTime;
@@ -18,8 +19,10 @@ class UserController extends AbstractController
     #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(Request $request, UserRepository $userRepository): JsonResponse
     {
-        
+     
         $data = json_decode($request->getContent(), true);
+     
+        $user = new User;
         $user = $userRepository->findOneBy(['email'=>$data['email']]);
 
         if (null === $user) {
