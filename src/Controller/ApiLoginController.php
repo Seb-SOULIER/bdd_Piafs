@@ -26,7 +26,7 @@ class ApiLoginController extends AbstractController
         if (null === $user) {
             return $this->json([
                 'message' => 'missing credentials',
-            ], JsonResponse::HTTP_UNAUTHORIZED);
+            ]);
         }
 
         $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='); // somehow create an API token for $user
@@ -43,7 +43,7 @@ class ApiLoginController extends AbstractController
             'role' => $user->getRoles(),
             'token' => $token,
             'validToken'=>$validToken
-        ], JsonResponse::HTTP_UNAUTHORIZED);
+        ]);
     }
 
     #[Route('/api/sendRestoreLogin', name: 'send_restore_login')]
