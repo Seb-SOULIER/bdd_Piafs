@@ -49,7 +49,7 @@ class UserController extends AbstractController
         return $this->json([
             'user'  => $user,
             'profil' => $profil
-        ]);
+        ], JsonResponse::HTTP_UNAUTHORIZED);
     }
 
     #[Route('/valid/user', name: 'valid_user')]
