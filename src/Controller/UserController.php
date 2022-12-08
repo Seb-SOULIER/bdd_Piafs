@@ -190,8 +190,8 @@ class UserController extends AbstractController
         $children = new Children();
         $children->setName($data['name']);
 
-        if($data['birthdate'] == "15"){
-            $birthdate = new DateTime();
+        if($data['birthdate'] === "15"){
+            $birthdate = new Date();
         }else{
             $mydate = getDate(strtotime($data['birthdate']));
             $birthdate = new \DateTime();
