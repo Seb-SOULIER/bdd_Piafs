@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\Date;
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
-    public function recupUser(Request $request): JsonResponse
+    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
         $user = $this->getUser();
         if (null === $user) {
@@ -40,7 +40,7 @@ class UserController extends AbstractController
         }
 
         return $this->json([
-            'user'  => $user,
+            // 'user'  => $user,
             'profil' => $profil
         ]);
     }
