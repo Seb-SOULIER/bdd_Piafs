@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -74,9 +76,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $activeAt = null;
 
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]
+    private Collection $childrens;
+
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
+        $this->childrens = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,6 +336,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActiveAt(?\DateTimeInterface $activeAt): self
     {
         $this->activeAt = $activeAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Children>
+     */
+    public function getChildrens(): Collection
+    {
+        return $this->childrens;
+    }
+
+    public function addChildren(Children $children): self
+    {
+        if (!$this->childrens->contains($children)) {
+            $this->childrens->add($children);
+            $children->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChildren(Children $children): self
+    {
+        if ($this->childrens->removeElement($children)) {
+            // set the owning side to null (unless already changed)
+            if ($children->getParent() === $this) {
+                $children->setParent(null);
+            }
+        }
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Children;
 use App\Repository\UserRepository;
 use App\Service\ActiveUser;
 use DateTime;
@@ -171,6 +172,35 @@ class UserController extends AbstractController
 
         return $this->json([
             'message'=>'non'
+        ]);
+    }
+
+    #[Route('/addChildren/user', name: 'children_user')]
+    public function addChildrenUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
+    {
+        $user= $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $children = new Children();
+        $children->setName($data['name']);
+
+        $mydate = getDate(strtotime($data['birthdate']));
+        $birthdate = new \DateTime();
+        date_date_set($birthdate, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        $children->setBirthdate($birthdate);
+        $children->setParent($user);
+
+        $entityManager->persist($children);
+        $entityManager->flush();
+
+        return $this->json([
+            'message' => 'Success',
         ]);
     }
 }
