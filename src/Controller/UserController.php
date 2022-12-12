@@ -4,25 +4,19 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Repository\UserRepository;
-use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Validator\Constraints\Date;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
 class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
-    public function recupUser(EntityManagerInterface $entityManager): JsonResponse
+    
+    public function recupUser(): JsonResponse
     {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
@@ -240,7 +234,7 @@ class UserController extends AbstractController
     #[Route('/addChildren/user', name: 'children_user')]
     public function addChildrenUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
     {
-        $user= $this->secutity->getUser();
+        $user= $this->getUser();
         $data = json_decode($request->getContent(), true);
 
         if (null === $user) {
