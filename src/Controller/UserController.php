@@ -22,7 +22,7 @@ class UserController extends AbstractController
     #[Route('/recup/user', name: 'recup_user')]
     public function recupUser(EntityManagerInterface $entityManager): JsonResponse
     {
-        $user = $this->getUser();
+        $user = $this->security->getUser();
         if (null === $user) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
@@ -240,7 +240,7 @@ class UserController extends AbstractController
     #[Route('/addChildren/user', name: 'children_user')]
     public function addChildrenUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
     {
-        $user= $this->getUser();
+        $user= $this->secutity->getUser();
         $data = json_decode($request->getContent(), true);
 
         if (null === $user) {
