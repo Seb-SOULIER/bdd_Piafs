@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'Il y a deja un compte avec cet email')]
@@ -20,12 +21,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("user")]
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups("user")]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups("user")]
     private array $roles = ['ROLE_USER'];
 
     /**
@@ -38,42 +42,54 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $token = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups("user")]
     private ?\DateTimeInterface $validToken = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("user")]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("user")]
     private ?string $firstname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups("user")]
     private ?\DateTimeInterface $birthdate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("user")]
     private ?string $avatar = null;
 
     #[ORM\Column(length: 255, nullable:true)]
+    #[Groups("user")]
     private ?string $address = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups("user")]
     private ?int $zipcode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("user")]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups("user")]
     private ?string $phone = null;
 
     #[ORM\Column]
+    #[Groups("user")]
     private ?\DateTimeImmutable $subcribeAt;
 
     #[ORM\Column]
+    #[Groups("user")]
     private ?bool $isActive = null;
 
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $restoreCode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups("user")]
     private ?\DateTimeInterface $activeAt = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]

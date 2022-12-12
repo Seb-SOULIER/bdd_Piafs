@@ -4,12 +4,18 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Repository\UserRepository;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Mapping\Loader\AnnotationLoader;
+use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 
 class UserController extends AbstractController
 {
@@ -158,7 +164,38 @@ class UserController extends AbstractController
                         $listUser = $userRepository->findAllUser(null,null);
                     }
                 }
-                return $this->json($listUser);
+
+                $listUserSend = [];
+                foreach($listUser as $userOne){
+                    $childrenArray=[];
+                    $childrens = $userOne->getChildrens();
+                    foreach($childrens as $children){
+                        array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
+                    }
+
+                    $userSend = [
+                        'id'=>$userOne->getId(),
+                        'email'=> $userOne->getEmail(),
+                        'userIdentifier'=>$userOne->getEmail(),
+                        'username'=>$userOne->getEmail(),
+                        'roles'=> $userOne->getRoles(),
+                        'lastname'=> $userOne->getLastname(),
+                        'firstname'=> $userOne->getFirstname(),
+                        'birthdate'=> $userOne->getBirthdate(),
+                        'avatar'=> $userOne->getAvatar(),
+                        'address'=> $userOne->getAddress(),
+                        'zipcode'=>$userOne->getZipcode(),
+                        'city'=>$userOne->getCity(),
+                        'phone'=>$userOne->getPhone(),
+                        'subcribeAt'=> $userOne->getSubcribeAt(),
+                        'isActive'=> $userOne->isIsActive(),
+                        'activeAt'=> $userOne->getActiveAt(),
+                        'children'=>$childrenArray
+                    ];
+                    array_push($listUserSend,$userSend);
+                }
+
+                return $this->json($listUserSend);
             }
         }
 
