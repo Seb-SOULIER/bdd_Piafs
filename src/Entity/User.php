@@ -95,10 +95,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]
     private Collection $childrens;
 
+    #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Atelier::class)]
+    private Collection $ateliers;
+
+    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'participant')]
+    private Collection $atelierParticipant;
+
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
         $this->childrens = new ArrayCollection();
+        $this->ateliers = new ArrayCollection();
+        $this->atelierParticipant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -381,6 +389,63 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($children->getParent() === $this) {
                 $children->setParent(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Atelier>
+     */
+    public function getAteliers(): Collection
+    {
+        return $this->ateliers;
+    }
+
+    public function addAtelier(Atelier $atelier): self
+    {
+        if (!$this->ateliers->contains($atelier)) {
+            $this->ateliers->add($atelier);
+            $atelier->setIntervenant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAtelier(Atelier $atelier): self
+    {
+        if ($this->ateliers->removeElement($atelier)) {
+            // set the owning side to null (unless already changed)
+            if ($atelier->getIntervenant() === $this) {
+                $atelier->setIntervenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Atelier>
+     */
+    public function getAtelierParticipant(): Collection
+    {
+        return $this->atelierParticipant;
+    }
+
+    public function addAtelierParticipant(Atelier $atelierParticipant): self
+    {
+        if (!$this->atelierParticipant->contains($atelierParticipant)) {
+            $this->atelierParticipant->add($atelierParticipant);
+            $atelierParticipant->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAtelierParticipant(Atelier $atelierParticipant): self
+    {
+        if ($this->atelierParticipant->removeElement($atelierParticipant)) {
+            $atelierParticipant->removeParticipant($this);
         }
 
         return $this;
