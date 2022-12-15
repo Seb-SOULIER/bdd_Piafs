@@ -38,11 +38,20 @@ class ApiLoginController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
+        $utilbdd = $user->getChildrens();
+
+        $utilisateurs = [];
+
+        foreach($utilbdd as $util) {
+            $utilisateurs[$util->getId()] = $util->getName();
+        }
+
         return $this->json([
             'user'  => $user->getUserIdentifier(),
             'role' => $user->getRoles(),
             'token' => $token,
-            'validToken'=>$validToken
+            'validToken'=>$validToken,
+            'utilisateurs'=>$utilisateurs
         ]);
     }
 
