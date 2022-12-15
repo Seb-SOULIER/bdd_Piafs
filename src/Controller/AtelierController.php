@@ -73,6 +73,14 @@ class AtelierController extends AbstractController
     #[Route('/atelier/list', name: 'list_atelier')]
     public function listAtelier(AtelierRepository $atelierRepository): Response
     {   
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
         $now = new DateTime('now');
         $listBdd = $atelierRepository->findAllAfter($now);
        
@@ -111,9 +119,18 @@ class AtelierController extends AbstractController
             $dateAt = $dateAtAtelier;
         }
 
-        return $this->json(
-            $listBddSend
-        );
+        $utilbdd = $user->getChildrens();
+
+        $utilisateurs = [];
+
+        foreach($utilbdd as $util) {
+            $utilisateurs[$util->getId()] = $util->getName();
+        }
+
+        return $this->json([
+            "listAteliers" => $listBddSend,
+            "utilisateurs" => $utilisateurs
+        ]);
     }
 
     #[Route('/atelier/inscription', name: 'inscription_atelier')]
