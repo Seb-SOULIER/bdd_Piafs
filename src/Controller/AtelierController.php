@@ -124,10 +124,9 @@ class AtelierController extends AbstractController
         $utilisateurs = [];
 
         foreach($utilbdd as $util) {
-            array_push($utilisateurs,[[
+            array_push($utilisateurs,[
                 'id' => $util->getId(),
                 'name' => $util->getName()
-            ]
             ]);
         }
 
