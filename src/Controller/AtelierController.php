@@ -142,6 +142,10 @@ class AtelierController extends AbstractController
             return $this->json([
                 "success" => $user->getLastname(),
             ]);
+        }else{
+            return $this->json([
+                "error"=>"Compte non activé"
+            ])
         }
 
         return $this->json([
