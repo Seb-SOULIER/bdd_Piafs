@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Atelier;
 use App\Repository\AtelierRepository;
+use App\Repository\ChildrenRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -85,6 +86,7 @@ class AtelierController extends AbstractController
             if($dateAtAtelier === $dateAt){
                 array_push($listBddSend[$dateAtAtelier], 
                     [
+                        'id' => $atelier->getId(),
                         'name' => $atelier->getName(),
                         'description' => $atelier->getDescription(),
                         'date' => $atelier->getDate(),
@@ -96,6 +98,7 @@ class AtelierController extends AbstractController
                 );
             }else{
                 $listBddSend[$dateAtAtelier] = [[
+                    'id' => $atelier->getId(),
                     'name' => $atelier->getName(),
                     'description' => $atelier->getDescription(),
                     'date' => $atelier->getDate(),
@@ -111,5 +114,38 @@ class AtelierController extends AbstractController
         return $this->json(
             $listBddSend
         );
+    }
+
+    #[Route('/atelier/inscription', name: 'inscription_atelier')]
+    public function inscriptionAtelier(AtelierRepository $atelierRepository, Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
+    {
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        if ($user->isIsActive() === true){
+            $data = json_decode($request->getContent(), true);
+            
+            $atelier = $atelierRepository->findOneBy(['id'=>$data['id']]);
+
+            $children = $childrenRepository->findOneBy(['id'=>$data['children']]);
+
+            $atelier->addParticipant($children);
+
+            $entityManager->persist($atelier);
+            $entityManager->flush();
+
+            return $this->json([
+                "success" => $user->getLastname(),
+            ]);
+        }
+
+        return $this->json([
+            "error"=>"Ajout non autorisé"
+        ]);
     }
 }

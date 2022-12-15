@@ -98,9 +98,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Atelier::class)]
     private Collection $ateliers;
 
-    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'participant')]
-    private Collection $atelierParticipant;
-
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
@@ -419,33 +416,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($atelier->getIntervenant() === $this) {
                 $atelier->setIntervenant(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Atelier>
-     */
-    public function getAtelierParticipant(): Collection
-    {
-        return $this->atelierParticipant;
-    }
-
-    public function addAtelierParticipant(Atelier $atelierParticipant): self
-    {
-        if (!$this->atelierParticipant->contains($atelierParticipant)) {
-            $this->atelierParticipant->add($atelierParticipant);
-            $atelierParticipant->addParticipant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAtelierParticipant(Atelier $atelierParticipant): self
-    {
-        if ($this->atelierParticipant->removeElement($atelierParticipant)) {
-            $atelierParticipant->removeParticipant($this);
         }
 
         return $this;

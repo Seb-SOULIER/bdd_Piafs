@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ChildrenRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +25,14 @@ class Children
     #[ORM\ManyToOne(inversedBy: 'childrens')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $parent = null;
+
+    #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'participants')]
+    private Collection $ateliers;
+
+    public function __construct()
+    {
+        $this->ateliers = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +71,33 @@ class Children
     public function setParent(?User $parent): self
     {
         $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Atelier>
+     */
+    public function getAteliers(): Collection
+    {
+        return $this->ateliers;
+    }
+
+    public function addAtelier(Atelier $atelier): self
+    {
+        if (!$this->ateliers->contains($atelier)) {
+            $this->ateliers->add($atelier);
+            $atelier->addParticipant($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAtelier(Atelier $atelier): self
+    {
+        if ($this->ateliers->removeElement($atelier)) {
+            $atelier->removeParticipant($this);
+        }
 
         return $this;
     }

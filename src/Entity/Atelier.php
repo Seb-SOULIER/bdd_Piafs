@@ -34,15 +34,16 @@ class Atelier
     #[ORM\ManyToOne(inversedBy: 'ateliers')]
     private ?user $intervenant = null;
 
-    #[ORM\ManyToMany(targetEntity: user::class, inversedBy: 'atelierParticipant')]
-    private Collection $participant;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    #[ORM\ManyToMany(targetEntity: Children::class, inversedBy: 'ateliers')]
+    private Collection $participants;
 
     public function __construct()
     {
         $this->participant = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -122,30 +123,6 @@ class Atelier
         return $this;
     }
 
-    /**
-     * @return Collection<int, user>
-     */
-    public function getParticipant(): Collection
-    {
-        return $this->participant;
-    }
-
-    public function addParticipant(user $participant): self
-    {
-        if (!$this->participant->contains($participant)) {
-            $this->participant->add($participant);
-        }
-
-        return $this;
-    }
-
-    public function removeParticipant(user $participant): self
-    {
-        $this->participant->removeElement($participant);
-
-        return $this;
-    }
-
     public function getDescription(): ?string
     {
         return $this->description;
@@ -154,6 +131,30 @@ class Atelier
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Children>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Children $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants->add($participant);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Children $participant): self
+    {
+        $this->participants->removeElement($participant);
 
         return $this;
     }

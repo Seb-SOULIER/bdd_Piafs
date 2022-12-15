@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Children;
 use App\Entity\User;
 use DateTime;
 use DateTimeImmutable;
@@ -54,6 +55,12 @@ class RegistrationController extends AbstractController
             ]);
         }
 
+        $children = new Children();
+        $children->setName($data['firstname']);
+        $children->setBirthdate($date);
+        $user->addChildren($children);
+
+        $entityManager->persist($children);
         $entityManager->persist($user);
         $entityManager->flush();
 
