@@ -145,7 +145,7 @@ class AtelierController extends AbstractController
         }else{
             return $this->json([
                 "error"=>"Compte non activé"
-            ])
+            ]);
         }
 
         return $this->json([
