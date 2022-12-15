@@ -124,7 +124,10 @@ class AtelierController extends AbstractController
         $utilisateurs = [];
 
         foreach($utilbdd as $util) {
-            $utilisateurs[$util->getId()] = $util->getName();
+            array_push($utilisateurs,[
+                'id' => $util->getId(),
+                'name' => $util->getName()
+            ]);
         }
 
         return $this->json([
