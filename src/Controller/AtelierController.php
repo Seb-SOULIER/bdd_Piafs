@@ -154,6 +154,29 @@ class AtelierController extends AbstractController
 
             $children = $childrenRepository->findOneBy(['id'=>$data['children']]);
 
+            $alreadyRegistered = false;
+
+            foreach($atelier->getParticipants() as $OneParticipant){
+                if($OneParticipant === $children){
+                    $alreadyRegistered = true;
+                }
+            }
+                
+            if ($alreadyRegistered){
+                return $this->json([
+                    "error" => 'Déjà inscrit à l\'atelier'
+                ]);
+            }else{
+                $atelier->addParticipant($children);
+
+                $entityManager->persist($atelier);
+                $entityManager->flush();
+
+                return $this->json([
+                    "success" => $user->getLastname(),
+                ]);
+            }
+
             $atelier->addParticipant($children);
 
             $entityManager->persist($atelier);
@@ -170,6 +193,53 @@ class AtelierController extends AbstractController
 
         return $this->json([
             "error"=>"Ajout non autorisé"
+        ]);
+    }
+
+    #[Route('/inscription/user', name: 'inscription_user')]
+    public function inscriptionUser(AtelierRepository $atelierRepository): Response
+    {
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        // recupere tous les ateliers
+        $ateliers = $atelierRepository->findByUser();
+
+        $reservationSend=[];
+
+        // Pour chaque atelier
+        foreach ($ateliers as $atelier){
+            
+            $participantArray=[];
+            
+            foreach($atelier->getParticipants() as $participant){
+                if($participant->getParent() === $user){
+                    array_push($participantArray,['name'=>$participant->getName(),'id'=>$participant->getId()]);
+                }
+            }
+           
+            if(!empty($participantArray)){
+                array_push($reservationSend, [
+                    'title'=>$atelier->getDate(),
+                    'id'=>$atelier->getId(),
+                    'data'=> [
+                        "atelier"=>$atelier->getName(),
+                        "intervenant"=>$atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
+                        "dateStart"=>$atelier->getHourStart(),
+                        "dateStop"=>$atelier->getHourStop(),
+                        "participant"=> $participantArray
+                    ]
+                ]);
+            }
+        }
+        
+        return $this->json([
+            "section"=>$reservationSend,
         ]);
     }
 }

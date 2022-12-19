@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Atelier;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,6 +55,28 @@ class AtelierRepository extends ServiceEntityRepository
        ;
    }
 
+
+    /**
+    * @return Atelier[] Returns an array of Atelier objects
+    */
+    public function findByUser(): array
+    {
+        return $this->createQueryBuilder('a')
+        ->andWhere('a.date >= :val')
+        ->setParameter('val', new DateTime())
+        ->orderBy('a.hourStart', 'ASC')
+        ->getQuery()
+        ->getResult()
+    ;
+        // return $this->createQueryBuilder('a')
+        // //    ->andWhere('a.date => :date')
+        // //    ->setParameter('user', $user)
+        // //    ->setParameter('date', new DateTime())
+        //    ->orderBy('a.date', 'ASC')
+        //    ->getQuery()
+        //    ->getResult()
+        // ;
+    }
 //    /**
 //     * @return Atelier[] Returns an array of Atelier objects
 //     */
