@@ -227,19 +227,19 @@ class AtelierController extends AbstractController
                 array_push($reservationSend, [
                     'title'=>$atelier->getDate(),
                     'id'=>$atelier->getId(),
-                    'data'=> [
+                    'data'=> [[
                         "atelier"=>$atelier->getName(),
                         "intervenant"=>$atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
                         "dateStart"=>$atelier->getHourStart(),
                         "dateStop"=>$atelier->getHourStop(),
                         "participant"=> $participantArray
-                    ]
+                    ]]
                 ]);
             }
         }
         
         return $this->json([
-            "section"=>$reservationSend,
+            'section'=> $reservationSend,
         ]);
     }
 }
