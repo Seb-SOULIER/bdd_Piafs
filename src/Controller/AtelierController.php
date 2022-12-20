@@ -83,7 +83,7 @@ class AtelierController extends AbstractController
         }
 
         $now = new DateTime('now');
-        $now->sub(new DateInterval('P1D'));
+        // $now->sub(new DateInterval('P1D'));
         
         $listBdd = $atelierRepository->findAllAfter($now);
        
