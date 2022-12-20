@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Atelier;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -82,6 +83,8 @@ class AtelierController extends AbstractController
         }
 
         $now = new DateTime('now');
+        $now->sub(new DateInterval('P1D'));
+        
         $listBdd = $atelierRepository->findAllAfter($now);
        
         $listBddSend = [];
