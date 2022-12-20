@@ -166,15 +166,6 @@ class AtelierController extends AbstractController
                 return $this->json([
                     "error" => 'Déjà inscrit à l\'atelier'
                 ]);
-            }else{
-                $atelier->addParticipant($children);
-
-                $entityManager->persist($atelier);
-                $entityManager->flush();
-
-                return $this->json([
-                    "success" => $user->getLastname(),
-                ]);
             }
 
             $atelier->addParticipant($children);
