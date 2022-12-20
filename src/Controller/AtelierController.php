@@ -243,4 +243,30 @@ class AtelierController extends AbstractController
             'section'=> $reservationSend,
         ]);
     }
+
+    #[Route('/atelier/unsubscibe', name: 'unsubscibe_atelier')]
+    public function unsubscibeAtelier(Request $request, AtelierRepository $atelierRepository, ChildrenRepository $childrenRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        $atelier = $atelierRepository->findById($data['atelier']);
+        $children = $childrenRepository->findById($data['participant']);
+
+        if (!empty($children) and !empty($atelier)){
+            $atelier[0]->removeParticipant($children[0]);
+            $entityManager->flush();
+        }
+
+        return $this->json([
+            'error'=> 'success',
+        ]);
+    }
 }
