@@ -229,6 +229,7 @@ class AtelierController extends AbstractController
                     'id'=>$atelier->getId(),
                     'data'=> [[
                         "atelier"=>$atelier->getName(),
+                        "id"=>$atelier->getId(),
                         "intervenant"=>$atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
                         "dateStart"=>$atelier->getHourStart(),
                         "dateStop"=>$atelier->getHourStop(),
