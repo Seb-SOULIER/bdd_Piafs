@@ -47,7 +47,7 @@ class AtelierRepository extends ServiceEntityRepository
     public function findAllAfter($now): array
    {
        return $this->createQueryBuilder('a')
-           ->andWhere('a.date >= :val')
+           ->andWhere('a.hourStart >= :val')
            ->setParameter('val', $now)
            ->orderBy('a.hourStart', 'ASC')
            ->getQuery()
