@@ -32,8 +32,8 @@ class ActualiteController extends AbstractController
             array_push($listActualiteSerialize,
                 [
                     'id' => 0,
-                    'title' => "Pas d\'actualité",
-                    'description' => "Actualités ajouter s'affiche ici",
+                    'title' => "Pas d'actualité",
+                    'description' => "Actualité ajoutée s'affiche ici",
                     'date' => Date('now'),
                     'author' => "Pas d'auteur",
                 ]
