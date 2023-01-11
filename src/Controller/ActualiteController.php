@@ -6,6 +6,7 @@ use App\Repository\ActualiteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 class ActualiteController extends AbstractController
 {
@@ -23,6 +24,18 @@ class ActualiteController extends AbstractController
                     'description' => $actualite->getDescription(),
                     'date' => $actualite->getDate(),
                     'author' => $actualite->getAuthor()->getLastname(). ' ' . $actualite->getAuthor()->getFirstname(),
+                ]
+            );
+        }
+
+        if($listActualiteSerialize === []){
+            array_push($listActualiteSerialize,
+                [
+                    'id' => 0,
+                    'title' => "Pas d\'actualité",
+                    'description' => "Actualités ajouter s'affiche ici",
+                    'date' => Date('now'),
+                    'author' => "Pas d'auteur",
                 ]
             );
         }
