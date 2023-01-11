@@ -98,12 +98,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'intervenant', targetEntity: Atelier::class)]
     private Collection $ateliers;
 
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Actualite::class)]
+    private Collection $actualites;
+
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
         $this->childrens = new ArrayCollection();
         $this->ateliers = new ArrayCollection();
         $this->atelierParticipant = new ArrayCollection();
+        $this->actualites = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -415,6 +419,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($atelier->getIntervenant() === $this) {
                 $atelier->setIntervenant(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Actualite>
+     */
+    public function getActualites(): Collection
+    {
+        return $this->actualites;
+    }
+
+    public function addActualite(Actualite $actualite): self
+    {
+        if (!$this->actualites->contains($actualite)) {
+            $this->actualites->add($actualite);
+            $actualite->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeActualite(Actualite $actualite): self
+    {
+        if ($this->actualites->removeElement($actualite)) {
+            // set the owning side to null (unless already changed)
+            if ($actualite->getAuthor() === $this) {
+                $actualite->setAuthor(null);
             }
         }
 
