@@ -44,7 +44,6 @@ class RegistrationController extends AbstractController
         $user->setZipcode($data['zipcode']);
         $user->setCity($data['city']);
         $user->setPhone($data['phone']);
-        $user->setIsActive(false);
         $user->setRestoreCode(null);
         
         $errors = $validator->validate($user);
@@ -58,6 +57,7 @@ class RegistrationController extends AbstractController
         $children = new Children();
         $children->setName($data['firstname']);
         $children->setBirthdate($date);
+        $children->setIsActive(false);
         $user->addChildren($children);
 
         $entityManager->persist($children);

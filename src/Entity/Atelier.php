@@ -42,7 +42,6 @@ class Atelier
 
     public function __construct()
     {
-        $this->participant = new ArrayCollection();
         $this->participants = new ArrayCollection();
     }
 

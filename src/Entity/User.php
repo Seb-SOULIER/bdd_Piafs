@@ -81,16 +81,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups("user")]
     private ?\DateTimeImmutable $subcribeAt;
 
-    #[ORM\Column]
-    #[Groups("user")]
-    private ?bool $isActive = null;
-
     #[ORM\Column(length: 10, nullable: true)]
     private ?string $restoreCode = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups("user")]
-    private ?\DateTimeInterface $activeAt = null;
 
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: Children::class)]
     private Collection $childrens;
@@ -106,7 +98,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->subcribeAt = new DateTimeImmutable('now');
         $this->childrens = new ArrayCollection();
         $this->ateliers = new ArrayCollection();
-        $this->atelierParticipant = new ArrayCollection();
         $this->actualites = new ArrayCollection();
     }
 
@@ -329,18 +320,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isIsActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
     public function getRestoreCode(): ?string
     {
         return $this->restoreCode;
@@ -349,18 +328,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRestoreCode(?string $restoreCode): self
     {
         $this->restoreCode = $restoreCode;
-
-        return $this;
-    }
-
-    public function getActiveAt(): ?\DateTimeInterface
-    {
-        return $this->activeAt;
-    }
-
-    public function setActiveAt(?\DateTimeInterface $activeAt): self
-    {
-        $this->activeAt = $activeAt;
 
         return $this;
     }

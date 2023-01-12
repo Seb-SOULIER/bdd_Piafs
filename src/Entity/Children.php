@@ -29,6 +29,12 @@ class Children
     #[ORM\ManyToMany(targetEntity: Atelier::class, mappedBy: 'participants')]
     private Collection $ateliers;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $activeAt = null;
+
     public function __construct()
     {
         $this->ateliers = new ArrayCollection();
@@ -98,6 +104,30 @@ class Children
         if ($this->ateliers->removeElement($atelier)) {
             $atelier->removeParticipant($this);
         }
+
+        return $this;
+    }
+
+    public function isIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getActiveAt(): ?\DateTimeImmutable
+    {
+        return $this->activeAt;
+    }
+
+    public function setActiveAt(?\DateTimeImmutable $activeAt): self
+    {
+        $this->activeAt = $activeAt;
 
         return $this;
     }
