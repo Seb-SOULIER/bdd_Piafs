@@ -236,19 +236,7 @@ class AtelierController extends AbstractController
 
         if($reservationSend === []){
             array_push($reservationSend, [
-                'title'=> new DateTime('now'),
-                'id'=>0,
-                'data'=> [[
-                    "atelier"=>"Pas d'inscription a un atelier",
-                    "id"=>0,
-                    "intervenant"=>"",
-                    "dateStart"=>new DateTime('now'),
-                    "dateStop"=>new DateTime('now'),
-                    "participant"=> [
-                        "name"=>"",
-                        "id"=>0
-                    ]
-                ]]
+                'title'=> 'Pas de reservation',
             ]);
         }
         
