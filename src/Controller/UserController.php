@@ -25,24 +25,27 @@ class UserController extends AbstractController
 
         $profil=false;
 
-        if ($user->isIsActive() === false) {
-            if (
-                $user->getLastname() and 
-                $user->getFirstname() and
-                $user->getBirthdate() and
-                $user->getAddress() and
-                $user->getZipcode() and
-                $user->getCity() and
-                $user->getPhone()
-            ){
-                $profil = true;
-            }
+        if (
+            $user->getLastname() and 
+            $user->getFirstname() and
+            $user->getBirthdate() and
+            $user->getAddress() and
+            $user->getZipcode() and
+            $user->getCity() and
+            $user->getPhone()
+        ){
+            $profil = true;
         }
 
         $childrenArray=[];
         $childrens = $user->getChildrens();
         foreach($childrens as $children){
-            array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
+            array_push($childrenArray,[
+                'name'=>$children->getName(),
+                'birthdate'=>$children->getBirthdate(),
+                'isActive'=>$children->getIsActive(),
+                'activeAt'=>$children->getActiveAt()
+            ]);
         }
 
 
@@ -61,8 +64,6 @@ class UserController extends AbstractController
             'city'=>$user->getCity(),
             'phone'=>$user->getPhone(),
             'subcribeAt'=> $user->getSubcribeAt(),
-            'isActive'=> $user->isIsActive(),
-            'activeAt'=> $user->getActiveAt(),
             'children'=>$childrenArray
         ];
 
