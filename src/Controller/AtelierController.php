@@ -244,7 +244,10 @@ class AtelierController extends AbstractController
                     "intervenant"=>"",
                     "dateStart"=>new DateTime('now'),
                     "dateStop"=>new DateTime('now'),
-                    "participant"=> ""
+                    "participant"=> [
+                        "name"=>"",
+                        "id"=>0
+                    ]
                 ]]
             ]);
         }
