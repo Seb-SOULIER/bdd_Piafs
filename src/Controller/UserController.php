@@ -44,7 +44,7 @@ class UserController extends AbstractController
                 'name'=>$children->getName(),
                 'birthdate'=>$children->getBirthdate(),
                 'isActive'=>$children->isIsActive(),
-                // 'activeAt'=>$children->getActiveAt()
+                'activeAt'=>$children->getActiveAt()
             ]);
         }
 
