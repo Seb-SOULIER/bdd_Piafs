@@ -43,7 +43,7 @@ class UserController extends AbstractController
             array_push($childrenArray,[
                 'name'=>$children->getName(),
                 'birthdate'=>$children->getBirthdate(),
-                // 'isActive'=>$children->getIsActive(),
+                'isActive'=>$children->isIsActive(),
                 // 'activeAt'=>$children->getActiveAt()
             ]);
         }
