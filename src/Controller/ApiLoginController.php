@@ -20,7 +20,7 @@ class ApiLoginController extends AbstractController
     #[Route('/api/login', name: 'api_login')]
     public function index(EntityManagerInterface $entityManager, ActiveUser $activeUser): JsonResponse
     {
-        $activeUser->inactiveUser();
+        // $activeUser->inactiveUser();
 
         $user= $this->getUser();
         if (null === $user) {
@@ -29,14 +29,14 @@ class ApiLoginController extends AbstractController
             ]);
         }
 
-        $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='); // somehow create an API token for $user
-        $validToken = new DateTime();
-        $validToken->add(new DateInterval('PT1H'));
+        // $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '='); // somehow create an API token for $user
+        // $validToken = new DateTime();
+        // $validToken->add(new DateInterval('PT1H'));
 
-        $user->setToken($token);
-        $user->setValidToken($validToken);
-        $entityManager->persist($user);
-        $entityManager->flush();
+        // $user->setToken($token);
+        // $user->setValidToken($validToken);
+        // $entityManager->persist($user);
+        // $entityManager->flush();
 
         $utilbdd = $user->getChildrens();
         $utilisateurs = [];
@@ -51,8 +51,8 @@ class ApiLoginController extends AbstractController
         return $this->json([
             'user'  => $user->getUserIdentifier(),
             'role' => $user->getRoles(),
-            'token' => $token,
-            'validToken'=>$validToken,
+            // 'token' => $token,
+            // 'validToken'=>$validToken,
             "utilisateurs" => $utilisateurs
         ]);
     }
