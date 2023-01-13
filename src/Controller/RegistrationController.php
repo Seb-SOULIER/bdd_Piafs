@@ -29,23 +29,7 @@ class RegistrationController extends AbstractController
                 $data['password']
             )
         );
-        $user->setToken(null);
-        $user->setValidToken(null);
-        $user->setLastname($data['lastname']);
-        $user->setFirstname($data['firstname']);
-        $mydate = getDate(strtotime($data['birthdate']));
 
-        $date = new \DateTime();
-        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
-        
-        $user->setBirthdate($date);
-        $user->setAvatar($data['avatar']);
-        $user->setAddress($data['address']);
-        $user->setZipcode($data['zipcode']);
-        $user->setCity($data['city']);
-        $user->setPhone($data['phone']);
-        $user->setRestoreCode(null);
-        
         $errors = $validator->validate($user);
 
         if(count($errors)>0){
@@ -54,19 +38,43 @@ class RegistrationController extends AbstractController
             ]);
         }
 
-        $children = new Children();
-        $children->setName($data['firstname']);
-        $children->setBirthdate($date);
-        $children->setIsActive(false);
-        $user->addChildren($children);
-
-        $entityManager->persist($children);
         $entityManager->persist($user);
         $entityManager->flush();
 
         return $this->json([
             'user'  => $user->getUserIdentifier(),
             'role' => $user->getRoles(),
+        ]);
+    }
+
+    #[Route('/registerEdit', name: 'app_edit')]
+    public function registerEdit(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $user= $this->getUser();
+
+        $user
+        ->setLastname($data['lastname'])
+        ->setFirstname($data['firstname'])
+        ->setAddress($data['address'])
+        ->setZipcode($data['zipcode'])
+        ->setCity($data['city'])
+        ->setPhone($data['phone'])     
+        ;
+        
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // $mydate = getDate(strtotime($data['birthdate']));
+        // $date = new \DateTime();
+        // date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        // $user->setBirthdate($date);
+
+        // $user->setAvatar($data['avatar']);
+
+        return $this->json([
+            'user'  => $user
         ]);
     }
 }

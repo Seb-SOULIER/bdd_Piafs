@@ -23,6 +23,7 @@ class ApiLoginController extends AbstractController
         // $activeUser->inactiveUser();
 
         $user= $this->getUser();
+
         if (null === $user) {
             return $this->json([
                 'message' => 'missing credentials',
@@ -38,22 +39,22 @@ class ApiLoginController extends AbstractController
         // $entityManager->persist($user);
         // $entityManager->flush();
 
-        $utilbdd = $user->getChildrens();
-        $utilisateurs = [];
+        // $utilbdd = $user->getChildrens();
+        // $utilisateurs = [];
 
-        foreach($utilbdd as $util) {
-            array_push($utilisateurs,[
-                'id' => $util->getId(),
-                'name' => $util->getName()
-            ]);
-        }
+        // foreach($utilbdd as $util) {
+        //     array_push($utilisateurs,[
+        //         'id' => $util->getId(),
+        //         'name' => $util->getName()
+        //     ]);
+        // }
 
         return $this->json([
             'user'  => $user->getUserIdentifier(),
             'role' => $user->getRoles(),
             // 'token' => $token,
             // 'validToken'=>$validToken,
-            "utilisateurs" => $utilisateurs
+            // "utilisateurs" => $utilisateurs
         ]);
     }
 

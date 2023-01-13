@@ -45,11 +45,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups("user")]
     private ?\DateTimeInterface $validToken = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups("user")]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups("user")]
     private ?string $firstname = null;
 
@@ -59,7 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups("user")]
-    private ?string $avatar = null;
+    private ?string $avatar = '1.png';
 
     #[ORM\Column(length: 255, nullable:true)]
     #[Groups("user")]
@@ -217,7 +217,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -229,7 +229,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
