@@ -85,8 +85,8 @@ class RegistrationController extends AbstractController
         $childrens = $user->getChildrens();
 
         foreach($childrens as $child){
-            if($child->getName() == $data['name']){
-                if($child->getFirstname() == $data['firstname']){
+            if(strtolower($child->getName()) === strtolower($data['name'])){
+                if(strtolower($child->getFirstname()) === strtolower($data['firstname'])){
                     return $this->json([
                         'error' => 'Utilisateur déjà ajouté',
                     ]);
