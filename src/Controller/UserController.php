@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Children;
+use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -112,7 +113,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/listuser/admin', name: 'listUser')]
-    public function recupListUser(Request $request, UserRepository $userRepository): JsonResponse
+    public function recupListUser(Request $request, UserRepository $userRepository, ChildrenRepository $childrenRepository): JsonResponse
     {
         $user= $this->getUser();
         if (null === $user) {
@@ -126,69 +127,82 @@ class UserController extends AbstractController
             $select = $data['select'];
             $select2 = $data['select2'];
 
+            $listUserChildren = [];
+            
             if($user->getRoles() === ['ROLE_ADMIN']){
-                if ($select === 'Administrateurs'){
-                    if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]','true');
-                    }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]','false');
-                    }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_ADMIN"]',null);
+                
+                if($select2 === 'Actifs'){
+                    $childrens = $childrenRepository->findBy(['isActive'=>true]);
+                    foreach($childrens as $children){
+                        if ($select === 'Administrateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Intervenants'){
+                            if($children->getParent()->getRoles() === ["ROLE_INTER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Utilisateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_USER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }else{
+                            array_push($listUserChildren,[$children]);
+                        }
                     }
-                }elseif($select === 'Intervenants'){
-                    if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]','true');
-                    }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]','false');
-                    }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_INTER"]',null);
-                    }
-                }elseif($select === 'Utilisateurs'){
-                    if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]','true');
-                    }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]','false');
-                    }else{
-                        $listUser = $userRepository->findAllUser('["ROLE_USER"]',null);
+                }elseif($select2 === 'Inactifs'){
+                    $childrens = $childrenRepository->findBy(['isActive'=>false]);
+                    foreach($childrens as $children){
+                        if ($select === 'Administrateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Intervenants'){
+                            if($children->getParent()->getRoles() === ["ROLE_INTER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Utilisateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_USER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }else{
+                            array_push($listUserChildren,[$children]);
+                        }
                     }
                 }else{
-                    if($select2 === 'Actifs'){
-                        $listUser = $userRepository->findAllUser(null,'true');
-                    }elseif($select2 === 'Inactifs'){
-                        $listUser = $userRepository->findAllUser(null,'false');
-                    }else{
-                        $listUser = $userRepository->findAllUser(null,null);
+                    $childrens = $childrenRepository->findAll();
+                    foreach($childrens as $children){
+                        if ($select === 'Administrateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Intervenants'){
+                            if($children->getParent()->getRoles() === ["ROLE_INTER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }elseif($select === 'Utilisateurs'){
+                            if($children->getParent()->getRoles() === ["ROLE_USER"] ){
+                                array_push($listUserChildren,[$children]);
+                            }
+                        }else{
+                            array_push($listUserChildren,[$children]);
+                        }
                     }
                 }
 
                 $listUserSend = [];
-                foreach($listUser as $userOne){
-                    $childrenArray=[];
-                    $childrens = $userOne->getChildrens();
-                    foreach($childrens as $children){
-                        array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
-                    }
-
-                    $userSend = [
-                        'id'=>$userOne->getId(),
-                        'email'=> $userOne->getEmail(),
-                        'userIdentifier'=>$userOne->getEmail(),
-                        'username'=>$userOne->getEmail(),
-                        'roles'=> $userOne->getRoles(),
-                        'lastname'=> $userOne->getLastname(),
-                        'firstname'=> $userOne->getFirstname(),
-                        'birthdate'=> $userOne->getBirthdate(),
-                        'avatar'=> $userOne->getAvatar(),
-                        'address'=> $userOne->getAddress(),
-                        'zipcode'=>$userOne->getZipcode(),
-                        'city'=>$userOne->getCity(),
-                        'phone'=>$userOne->getPhone(),
-                        'subcribeAt'=> $userOne->getSubcribeAt(),
-                        'isActive'=> $userOne->isIsActive(),
-                        'activeAt'=> $userOne->getActiveAt(),
-                        'children'=>$childrenArray
-                    ];
-                    array_push($listUserSend,$userSend);
+                foreach($listUserChildren as $childrenOne){    
+                    array_push($listUserSend,[
+                        'id'=>$childrenOne[0]->getId(),
+                        'name'=> $childrenOne[0]->getName(),
+                        'firstname'=>$childrenOne[0]->getFirstname(),
+                        'isActive'=>$childrenOne[0]->isIsActive(),
+                        'activeAt'=> $childrenOne[0]->getActiveAt(),
+                        'parent'=> $childrenOne[0]->getParent()->getEmail(),
+                        'firstnameParent'=> $childrenOne[0]->getParent()->getFirstname(),
+                        'lastnameParent'=> $childrenOne[0]->getParent()->getLastname(),
+                        'roleParent'=>$childrenOne[0]->getParent()->getRoles()
+                    ]);
                 }
 
                 return $this->json($listUserSend);
