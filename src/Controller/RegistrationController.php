@@ -47,23 +47,19 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerEdit', name: 'app_edit')]
-    public function registerEdit(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
+    #[Route('/registerEdit', name: 'register_edit')]
+    public function registerEdit(Request $request, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
         
         $user= $this->getUser();
+        $user->setLastname($data['lastname']);
+        $user->setFirstname($data['firstname']);
+        $user->setAddress($data['address']);
+        $user->setZipcode($data['zipcode']);
+        $user->setCity($data['city']);
+        $user->setPhone($data['phone']);
         
-        $user
-        ->setLastname($data['lastname'])
-        ->setFirstname($data['firstname'])
-        ->setAddress($data['address'])
-        ->setZipcode($data['zipcode'])
-        ->setCity($data['city'])
-        ->setPhone($data['phone'])     
-        ;
-        
-        $entityManager->persist($user);
         $entityManager->flush();
 
         // $mydate = getDate(strtotime($data['birthdate']));
@@ -74,7 +70,7 @@ class RegistrationController extends AbstractController
         // $user->setAvatar($data['avatar']);
 
         return $this->json([
-            'user'  => $user
+            'user'  => 'coucou'
         ]);
     }
 }
