@@ -71,7 +71,7 @@ class RegistrationController extends AbstractController
         // $user->setAvatar($data['avatar']);
 
         return $this->json([
-            'user'  => 'coucou'
+            'user'  => $user->getEmail()
         ]);
     }
 }
