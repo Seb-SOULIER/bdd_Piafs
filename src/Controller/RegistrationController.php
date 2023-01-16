@@ -60,6 +60,7 @@ class RegistrationController extends AbstractController
         $user->setCity($data['city']);
         $user->setPhone($data['phone']);
         
+        $entityManager->persist($user);
         $entityManager->flush();
 
         // $mydate = getDate(strtotime($data['birthdate']));
