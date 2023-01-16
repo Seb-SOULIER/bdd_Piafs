@@ -52,16 +52,16 @@ class RegistrationController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         
-        $user= $this->getUser();
-        $user->setLastname($data['lastname']);
-        $user->setFirstname($data['firstname']);
-        $user->setAddress($data['address']);
-        $user->setZipcode($data['zipcode']);
-        $user->setCity($data['city']);
-        $user->setPhone($data['phone']);
+        // $user= $this->getUser();
+        // $user->setLastname($data['lastname']);
+        // $user->setFirstname($data['firstname']);
+        // $user->setAddress($data['address']);
+        // $user->setZipcode($data['zipcode']);
+        // $user->setCity($data['city']);
+        // $user->setPhone($data['phone']);
         
-        $entityManager->persist($user);
-        $entityManager->flush();
+        // $entityManager->persist($user);
+        // $entityManager->flush();
 
         // $mydate = getDate(strtotime($data['birthdate']));
         // $date = new \DateTime();
@@ -71,7 +71,7 @@ class RegistrationController extends AbstractController
         // $user->setAvatar($data['avatar']);
 
         return $this->json([
-            'user'  => $user->getEmail()
+            'user'  => $data//$user->getEmail()
         ]);
     }
 }
