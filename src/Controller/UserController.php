@@ -42,6 +42,7 @@ class UserController extends AbstractController
         foreach($childrens as $children){
             array_push($childrenArray,[
                 'name'=>$children->getName(),
+                'firstname'=>$children->getFirstname(),
                 'birthdate'=>$children->getBirthdate(),
                 'isActive'=>$children->isIsActive(),
                 'activeAt'=>$children->getActiveAt()
