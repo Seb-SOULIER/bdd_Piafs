@@ -55,6 +55,11 @@ class RegistrationController extends AbstractController
         $user= $this->getUser();
         $user->setLastname($data['lastname']);
         $user->setFirstname($data['firstname']);
+
+        $mydate = getDate(strtotime($data['birthdate']));
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        $user->setBirthdate($date);
         $user->setAddress($data['address']);
         $user->setZipcode($data['zipcode']);
         $user->setCity($data['city']);
@@ -62,11 +67,6 @@ class RegistrationController extends AbstractController
         
         $entityManager->persist($user);
         $entityManager->flush();
-
-        // $mydate = getDate(strtotime($data['birthdate']));
-        // $date = new \DateTime();
-        // date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
-        // $user->setBirthdate($date);
 
         // $user->setAvatar($data['avatar']);
 
