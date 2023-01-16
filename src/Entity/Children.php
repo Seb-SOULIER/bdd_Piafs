@@ -35,6 +35,9 @@ class Children
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $activeAt = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $firstname = null;
+
     public function __construct()
     {
         $this->ateliers = new ArrayCollection();
@@ -128,6 +131,18 @@ class Children
     public function setActiveAt(?\DateTimeImmutable $activeAt): self
     {
         $this->activeAt = $activeAt;
+
+        return $this;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    public function setFirstname(?string $firstname): self
+    {
+        $this->firstname = $firstname;
 
         return $this;
     }

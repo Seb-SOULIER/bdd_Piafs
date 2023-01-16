@@ -74,4 +74,34 @@ class RegistrationController extends AbstractController
             'user'  => $user->getEmail()
         ]);
     }
+
+    #[Route('/registerChildrenEdit', name: 'register_children_edit')]
+    public function registerChildrenEdit(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $user= $this->getUser();
+
+        $children = new Children();
+        $children->setName($data['name']);
+        $children->setFirstname($data['firstname']);
+        $children->setIsActive(false);
+        
+        $mydate = getDate(strtotime($data['birthdate']));
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        $children->setBirthdate($date);
+
+        $user->addChildren($children);
+        
+        $entityManager->persist($children);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // $user->setAvatar($data['avatar']);
+
+        return $this->json([
+            'success'  => 'ok'
+        ]);
+    }
 }
