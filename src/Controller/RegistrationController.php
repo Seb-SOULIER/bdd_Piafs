@@ -82,6 +82,18 @@ class RegistrationController extends AbstractController
         
         $user= $this->getUser();
 
+        $childrens = $user->getChildrens();
+
+        foreach($childrens as $child){
+            if($child->getName() == $data['name']){
+                if($child->getFirstname() == $data['firstname']){
+                    return $this->json([
+                        'error' => 'Utilisateur déjà ajouté',
+                    ]);
+                }
+            }
+        }
+
         $children = new Children();
         $children->setName($data['name']);
         $children->setFirstname($data['firstname']);
@@ -101,7 +113,7 @@ class RegistrationController extends AbstractController
         // $user->setAvatar($data['avatar']);
 
         return $this->json([
-            'success'  => 'ok'
+            'success'  => 'ok',
         ]);
     }
 }
