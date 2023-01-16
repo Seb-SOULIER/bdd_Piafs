@@ -132,7 +132,7 @@ class UserController extends AbstractController
             if($user->getRoles() === ['ROLE_ADMIN']){
                 
                 if($select2 === 'Actifs'){
-                    $childrens = $childrenRepository->findBy(['isActive'=>true]);
+                    $childrens = $childrenRepository->findBy(['isActive'=>true],['id'=>'DESC']);
                     foreach($childrens as $children){
                         if ($select === 'Administrateurs'){
                             if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
@@ -151,7 +151,7 @@ class UserController extends AbstractController
                         }
                     }
                 }elseif($select2 === 'Inactifs'){
-                    $childrens = $childrenRepository->findBy(['isActive'=>false]);
+                    $childrens = $childrenRepository->findBy(['isActive'=>false],['id'=>'DESC']);
                     foreach($childrens as $children){
                         if ($select === 'Administrateurs'){
                             if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
@@ -170,7 +170,7 @@ class UserController extends AbstractController
                         }
                     }
                 }else{
-                    $childrens = $childrenRepository->findAll();
+                    $childrens = $childrenRepository->findAll([],['id'=>'DESC']);
                     foreach($childrens as $children){
                         if ($select === 'Administrateurs'){
                             if($children->getParent()->getRoles() === ["ROLE_ADMIN"] ){
