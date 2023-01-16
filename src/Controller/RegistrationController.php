@@ -51,9 +51,9 @@ class RegistrationController extends AbstractController
     public function registerEdit(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
-
+        
         $user= $this->getUser();
-
+        
         $user
         ->setLastname($data['lastname'])
         ->setFirstname($data['firstname'])
