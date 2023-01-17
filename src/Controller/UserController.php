@@ -75,7 +75,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/recup/Adminuser', name: 'recup_Adminuser')]
+    #[Route('/recup/AdminUser', name: 'recup_Adminuser')]
     
     public function recupAdminUser(UserRepository $userRepository, Request $request): JsonResponse
     {
