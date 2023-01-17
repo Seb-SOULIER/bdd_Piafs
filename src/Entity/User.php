@@ -93,6 +93,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'author', targetEntity: Actualite::class)]
     private Collection $actualites;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $allActif = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $allInactif = null;
+
     public function __construct()
     {
         $this->subcribeAt = new DateTimeImmutable('now');
@@ -418,6 +424,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $actualite->setAuthor(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isAllActif(): ?bool
+    {
+        return $this->allActif;
+    }
+
+    public function setAllActif(?bool $allActif): self
+    {
+        $this->allActif = $allActif;
+
+        return $this;
+    }
+
+    public function isAllInactif(): ?bool
+    {
+        return $this->allInactif;
+    }
+
+    public function setAllInactif(?bool $allInactif): self
+    {
+        $this->allInactif = $allInactif;
 
         return $this;
     }

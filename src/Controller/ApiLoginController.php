@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use App\Service\ActiveUser;
 use DateInterval;
@@ -18,9 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiLoginController extends AbstractController
 {
     #[Route('/api/login', name: 'api_login')]
-    public function index(EntityManagerInterface $entityManager, ActiveUser $activeUser): JsonResponse
+    public function index(EntityManagerInterface $entityManager, ActiveUser $activeUser, ChildrenRepository $childrenRepository): JsonResponse
     {
-        // $activeUser->inactiveUser();
+        $activeUser->inactiveUser();
 
         $user= $this->getUser();
 
@@ -41,7 +42,6 @@ class ApiLoginController extends AbstractController
 
         // $utilbdd = $user->getChildrens();
         // $utilisateurs = [];
-
         // foreach($utilbdd as $util) {
         //     array_push($utilisateurs,[
         //         'id' => $util->getId(),
@@ -52,9 +52,6 @@ class ApiLoginController extends AbstractController
         return $this->json([
             'user'  => $user->getUserIdentifier(),
             'role' => $user->getRoles(),
-            // 'token' => $token,
-            // 'validToken'=>$validToken,
-            // "utilisateurs" => $utilisateurs
         ]);
     }
 

@@ -2,39 +2,36 @@
 
 namespace App\Service;
 
-use App\Repository\UserRepository;
+use App\Repository\ChildrenRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ActiveUser
 {
-    private $userListRepository;
-    private $userEntityManager;
+    private $childrenListRepository;
+    private $childrenEntityManager;
 
-    public function __construct(UserRepository $userRepository, EntityManagerInterface $entityManager)
+    public function __construct(ChildrenRepository $childrenRepository, EntityManagerInterface $entityManager)
     {
-        $this->userListRepository = $userRepository;
-        $this->userEntityManager = $entityManager;
+        $this->childrenListRepository = $childrenRepository;
+        $this->childrenEntityManager = $entityManager;
     }
     
     function inactiveUser()
     {
-        $userList = $this->userListRepository->findAll();
-        
-        foreach($userList as $userOne){
-            if($userOne->getActiveAt()){
-                if($userOne->getActiveAt() > new DateTime()){
-                    $userOne->setIsActive(true);
-                }else{
-                    $userOne->setIsActive(false);
-                }
-            }else{
-                if($userOne->isIsActive() === true){
-                    $userOne->setIsActive(false);
-                }
-            }
-        $this->userEntityManager->persist($userOne);
-        $this->userEntityManager->flush();        
+        $date = new DateTime();
+
+        $childrenListInactif = $this->childrenListRepository->findByDateInf($date);
+        foreach($childrenListInactif as $childrenOneInactif){
+            $childrenOneInactif->setIsActive(false);
         }
+
+        $childrenListActif = $this->childrenListRepository->findByDateSup($date);
+        foreach($childrenListActif as $childrenOneActif){
+            $childrenOneActif->setIsActive(true);
+        }
+
+
+        $this->childrenEntityManager->flush();        
     }
 }

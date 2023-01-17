@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Children;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * @extends ServiceEntityRepository<Children>
@@ -37,6 +39,33 @@ class ChildrenRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+    * @return Children[] Returns an array of Children objects
+    */
+   public function findByDateInf($date): array
+   {
+        return $this->createQueryBuilder('c')
+           ->andWhere('c.activeAt < :val')
+           ->OrWhere('c.activeAt IS NULL')
+           ->setParameter('val', $date)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+    /**
+    * @return Children[] Returns an array of Children objects
+    */
+    public function findByDateSup($date): array
+    {
+         return $this->createQueryBuilder('c')
+            ->andWhere('c.activeAt >= :val')
+            ->setParameter('val', $date)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

@@ -56,7 +56,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->save($user, true);
     }
 
-    public function findAllUser(?string $roles, ?string $actif)
+    public function findAllUser(?string $roles, ?bool $actif)
     {
         if (!$roles && !$actif) {
             $query = $this->createQueryBuilder('u')
@@ -100,15 +100,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     /**
     * @return User[] Returns an array of User objects
     */
-   public function findByRoles($roles): array
+   public function findByRoles($roles, $act): array
    {
-       return $this->createQueryBuilder('u')
-           ->andWhere('u.roles LIKE :val')
-           ->setParameter('val', $roles)
-           ->orderBy('u.id', 'DESC')
-           ->getQuery()
-           ->getResult()
-       ;
+
+    if ($act === "actifs") {
+        $query = $this->createQueryBuilder('u')
+        ->andWhere('u.roles LIKE :val')
+        ->andWhere('u.allActif = true')
+        ->setParameter('val', $roles)
+        ->orderBy('u.id', 'DESC')
+        ;
+    }elseif($act === "inactifs"){
+        $query = $this->createQueryBuilder('u')
+        ->andWhere('u.roles LIKE :val')
+        ->andWhere('u.allInactif = true')
+        ->setParameter('val', $roles)
+        ->orderBy('u.id', 'DESC')
+        ;
+    }else{
+        $query = $this->createQueryBuilder('u')
+        ->andWhere('u.roles LIKE :val')
+        ->setParameter('val', $roles)
+        ->orderBy('u.id', 'DESC')
+        ;
+    }
+    return $query->getQuery()->getResult();
    }
 
 //    /**
