@@ -150,4 +150,46 @@ class RegistrationController extends AbstractController
             'success'  => 'ok',
         ]);
     }
+
+    #[Route('/registerAdminChildrenEdit', name: 'register_Admin_children_edit')]
+    public function registerAdminChildrenEdit(Request $request, EntityManagerInterface $entityManager,UserRepository $userRepository): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $user = $userRepository->findOneBy(['id'=>$data['id']]);
+
+        $childrens = $user->getChildrens();
+
+        foreach($childrens as $child){
+            if(strtolower($child->getName()) === strtolower($data['name'])){
+                if(strtolower($child->getFirstname()) === strtolower($data['firstname'])){
+                    return $this->json([
+                        'error' => 'Utilisateur déjà ajouté',
+                    ]);
+                }
+            }
+        }
+
+        $children = new Children();
+        $children->setName($data['name']);
+        $children->setFirstname($data['firstname']);
+        $children->setIsActive(false);
+        
+        $mydate = getDate(strtotime($data['birthdate']));
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        $children->setBirthdate($date);
+
+        $user->addChildren($children);
+        
+        $entityManager->persist($children);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // $user->setAvatar($data['avatar']);
+
+        return $this->json([
+            'success'  => 'ok',
+        ]);
+    }
 }
