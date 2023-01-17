@@ -107,6 +107,7 @@ class UserController extends AbstractController
         $childrens = $userOne->getChildrens();
         foreach($childrens as $children){
             array_push($childrenArray,[
+                'id'=>$children->getId(),
                 'name'=>$children->getName(),
                 'firstname'=>$children->getFirstname(),
                 'birthdate'=>$children->getBirthdate(),
