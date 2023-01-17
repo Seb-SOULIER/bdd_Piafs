@@ -33,7 +33,7 @@ class Children
     private ?bool $isActive = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $activeAt = null;
+    private ?\DateTime $activeAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstname = null;
@@ -123,12 +123,12 @@ class Children
         return $this;
     }
 
-    public function getActiveAt(): ?\DateTimeImmutable
+    public function getActiveAt(): ?\DateTime
     {
         return $this->activeAt;
     }
 
-    public function setActiveAt(?\DateTimeImmutable $activeAt): self
+    public function setActiveAt(?\DateTime $activeAt): self
     {
         $this->activeAt = $activeAt;
 

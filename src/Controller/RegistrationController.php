@@ -194,6 +194,30 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/registerAdminChildrenActive', name: 'register_Admin_children_active')]
+    public function registerAdminChildrenActive(Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $children = $childrenRepository->findOneBy(['id'=>$data['id']]);
+
+        $mydate = getDate(strtotime($data['date']));
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+
+        $children->setActiveAt($date);
+        $children->setIsActive(true);
+
+        $entityManager->persist($children);
+        $entityManager->flush();
+
+        return $this->json([
+            'success'  => 'ok',
+        ]);
+    }
+
+
     #[Route('/registerAdminChildrenSuppr', name: 'register_Admin_children_Suppr')]
     public function registerAdminChildrenSuppr(Request $request, EntityManagerInterface $entityManager, ChildrenRepository $childrenRepository): Response
     {
