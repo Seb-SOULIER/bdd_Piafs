@@ -257,7 +257,7 @@ class UserController extends AbstractController
                         $list = $userRepository->findByRoles(['["ROLE_USER"]'],null);
                     }
                 }else{
-                    $list = $userRepository->findAll();
+                    $list = $userRepository->findAll([],['id'=>'DESC']);
                 }
             }
 
