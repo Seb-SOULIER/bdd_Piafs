@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -53,6 +54,39 @@ class RegistrationController extends AbstractController
         $data = json_decode($request->getContent(), true);
         
         $user= $this->getUser();
+        $user->setLastname($data['lastname']);
+        $user->setFirstname($data['firstname']);
+
+        $mydate = getDate(strtotime($data['birthdate']));
+        $date = new \DateTime();
+        date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        $user->setBirthdate($date);
+        $user->setAddress($data['address']);
+        $user->setZipcode($data['zipcode']);
+        $user->setCity($data['city']);
+        $user->setPhone($data['phone']);
+        
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        // $user->setAvatar($data['avatar']);
+
+        return $this->json([
+            'user'  => $user->getEmail()
+        ]);
+    }
+
+    #[Route('/registerAdminEdit', name: 'register_admin_edit')]
+    public function registerAdminEdit(
+                                        Request $request,
+                                        EntityManagerInterface $entityManager,
+                                        ValidatorInterface $validator,
+                                        UserRepository $userRepository
+                                    ): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $user= $userRepository->findOneBy(['id'=>$data['id']]);
         $user->setLastname($data['lastname']);
         $user->setFirstname($data['firstname']);
 
