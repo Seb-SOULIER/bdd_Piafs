@@ -102,25 +102,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     */
    public function findByRoles($roles, $act): array
    {
-
-    if ($act === "actifs") {
+    if ($roles === Null){
         $query = $this->createQueryBuilder('u')
-        ->andWhere('u.roles LIKE :val')
-        ->andWhere('u.allActif = true')
-        ->setParameter('val', $roles)
-        ->orderBy('u.id', 'DESC')
-        ;
-    }elseif($act === "inactifs"){
-        $query = $this->createQueryBuilder('u')
-        ->andWhere('u.roles LIKE :val')
-        ->andWhere('u.allInactif = true')
-        ->setParameter('val', $roles)
-        ->orderBy('u.id', 'DESC')
-        ;
+        ->orderBy('u.id', 'DESC');
     }else{
         $query = $this->createQueryBuilder('u')
         ->andWhere('u.roles LIKE :val')
         ->setParameter('val', $roles)
+        ->orderBy('u.id', 'DESC');
+    }
+    
+    if ($act === "actifs") {
+        $query = $query
+        ->andWhere('u.allActif = true')
+        ;
+    }elseif($act === "inactifs"){
+        $query = $query
+        ->andWhere('u.allInactif = true')
+        ->orderBy('u.id', 'DESC')
+        ;
+    }else{
+        $query = $query
         ->orderBy('u.id', 'DESC')
         ;
     }

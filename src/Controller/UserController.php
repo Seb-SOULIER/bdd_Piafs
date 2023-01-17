@@ -257,7 +257,13 @@ class UserController extends AbstractController
                         $list = $userRepository->findByRoles(['["ROLE_USER"]'],null);
                     }
                 }else{
-                    $list = $userRepository->findAll([],['id'=>'DESC']);
+                    if($select2 === 'Actifs'){
+                        $list = $userRepository->findByRoles(null,'actifs');
+                    }elseif($select2 === 'Inactifs'){
+                        $list = $userRepository->findByRoles(null,'inactifs');
+                    }else{
+                        $list = $userRepository->findByRoles(null,null);
+                    }
                 }
             }
 
