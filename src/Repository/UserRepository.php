@@ -108,7 +108,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ->andWhere('u.roles LIKE :val')
         ->andWhere('u.allActif = true')
         ->setParameter('val', $roles)
-        ->orderBy('u.id', 'DESC')
+        ->orderBy('u.id', 'ASC')
         ;
     }elseif($act === "inactifs"){
         $query = $this->createQueryBuilder('u')
