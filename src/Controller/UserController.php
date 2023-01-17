@@ -203,6 +203,7 @@ class UserController extends AbstractController
                     'id'=>$listOne->getId(),
                     'name'=> $listOne->getLastname(),
                     'firstname'=>$listOne->getFirstname(),
+                    'role'=>$listOne->getRoles()
                 ]);
             }
 
