@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Entity\User;
+use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -190,6 +191,26 @@ class RegistrationController extends AbstractController
 
         return $this->json([
             'success'  => 'ok',
+        ]);
+    }
+
+    #[Route('/registerAdminChildrenSuppr', name: 'register_Admin_children_Suppr')]
+    public function registerAdminChildrenSuppr(Request $request, EntityManagerInterface $entityManager, ChildrenRepository $childrenRepository): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $children = $childrenRepository->findOneBy(['id'=>$data['id']]);
+        if($children){
+            $entityManager->remove($children);
+            $entityManager->flush();
+        }else{
+            return $this->json([
+                'error' => 'Adherant non trouvé',
+            ]);
+        }
+
+        return $this->json([
+            'success'  => "ok",
         ]);
     }
 }
