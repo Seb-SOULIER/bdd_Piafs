@@ -75,6 +75,71 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/recup/Adminuser', name: 'recup_Adminuser')]
+    
+    public function recupAdminUser(UserRepository $userRepository, Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $profil=false;
+
+        $data = json_decode($request->getContent(), true);
+        $userOne = $userRepository->findOneBy(['id'=>$data['idUser']]);
+
+        if (
+            $userOne->getLastname() and 
+            $userOne->getFirstname() and
+            $userOne->getBirthdate() and
+            $userOne->getAddress() and
+            $userOne->getZipcode() and
+            $userOne->getCity() and
+            $userOne->getPhone()
+        ){
+            $profil = true;
+        }
+
+        $childrenArray=[];
+        $childrens = $userOne->getChildrens();
+        foreach($childrens as $children){
+            array_push($childrenArray,[
+                'name'=>$children->getName(),
+                'firstname'=>$children->getFirstname(),
+                'birthdate'=>$children->getBirthdate(),
+                'isActive'=>$children->isIsActive(),
+                'activeAt'=>$children->getActiveAt()
+            ]);
+        }
+
+
+        $userSend = [
+            'id'=>$userOne->getId(),
+            'email'=> $userOne->getEmail(),
+            'userIdentifier'=>$userOne->getEmail(),
+            'username'=>$userOne->getEmail(),
+            'roles'=> $userOne->getRoles(),
+            'lastname'=> $userOne->getLastname(),
+            'firstname'=> $userOne->getFirstname(),
+            'birthdate'=> $userOne->getBirthdate(),
+            'avatar'=> $userOne->getAvatar(),
+            'address'=> $userOne->getAddress(),
+            'zipcode'=>$userOne->getZipcode(),
+            'city'=>$userOne->getCity(),
+            'phone'=>$userOne->getPhone(),
+            'subcribeAt'=> $userOne->getSubcribeAt(),
+            'children'=>$childrenArray
+        ];
+
+        return $this->json([
+            'user'  => $userSend,
+            'profil' => $profil
+        ]);
+    }
+
     #[Route('/valid/user', name: 'valid_user')]
     public function validUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
     {
