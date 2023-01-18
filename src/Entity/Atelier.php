@@ -40,6 +40,9 @@ class Atelier
     #[ORM\ManyToMany(targetEntity: Children::class, inversedBy: 'ateliers')]
     private Collection $participants;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $placeReserved = null;
+
     public function __construct()
     {
         $this->participants = new ArrayCollection();
@@ -154,6 +157,18 @@ class Atelier
     public function removeParticipant(Children $participant): self
     {
         $this->participants->removeElement($participant);
+
+        return $this;
+    }
+
+    public function getPlaceReserved(): ?int
+    {
+        return $this->placeReserved;
+    }
+
+    public function setPlaceReserved(?int $placeReserved): self
+    {
+        $this->placeReserved = $placeReserved;
 
         return $this;
     }

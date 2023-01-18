@@ -34,6 +34,7 @@ class AtelierController extends AbstractController
             $atelier->setName($data['name']);
             $atelier->setDescription($data['description']);
             $atelier->setPlace($data['place']);
+            $atelier->setPlaceReserved(0);
 
             $dateAtel = getDate(strtotime($data['dateAddAtelier']));
             $dateAtelier = new \DateTime();
@@ -105,7 +106,8 @@ class AtelierController extends AbstractController
                         'hoursStart' => $atelier->getHourStart(),
                         'hoursStop' => $atelier->getHourStop(),
                         'intervenant' => $atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
-                        'places'=>$atelier->getPlace()
+                        'places'=>$atelier->getPlace(),
+                        'placesReserved'=>$atelier->getPlaceReserved()
                     ]
                 );
             }else{
@@ -117,7 +119,8 @@ class AtelierController extends AbstractController
                     'hoursStart' => $atelier->getHourStart(),
                     'hoursStop' => $atelier->getHourStop(),
                     'intervenant' => $atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
-                    'places'=>$atelier->getPlace()
+                    'places'=>$atelier->getPlace(),
+                    'placesReserved'=>$atelier->getPlaceReserved()
                 ]];
             }
             $dateAt = $dateAtAtelier;
