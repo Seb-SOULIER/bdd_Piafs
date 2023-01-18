@@ -143,6 +143,33 @@ class AtelierController extends AbstractController
         ]);
     }
 
+
+    #[Route('/atelier/children', name: 'list_children')]
+    public function listchildren(ChildrenRepository $childrenRepository): Response
+    {  
+        $user= $this->getUser();
+        $childrens = $childrenRepository->findBy(['parent'=>$user,'isActive'=>true]);
+
+        $childrensSend = [];
+        foreach($childrens as $children) {
+            array_push($childrensSend, 
+                [
+                    'id' => $children->getId(),
+                    'name' => $children->getName(),
+                    'firstname' => $children->getFirstname(),
+                    'birthdate' => $children->getBirthdate(),
+                    'isActive' => $children->isIsActive(),
+                    'activeAt' => $children->getActiveAt()
+                ]
+            );
+        }
+
+        return $this->json([
+            "childrens" => $childrensSend,
+ 
+        ]);
+    }
+
     #[Route('/atelier/inscription', name: 'inscription_atelier')]
     public function inscriptionAtelier(AtelierRepository $atelierRepository, Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
     {
