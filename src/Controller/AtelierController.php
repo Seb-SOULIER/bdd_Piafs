@@ -194,7 +194,7 @@ class AtelierController extends AbstractController
                 }
 
                 if($alreadyRegistered){
-                    array_push($error, $children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit');    
+                    array_push($error, [$children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit']);    
                 }else{
                     $atelier->addParticipant($children);
 
@@ -204,7 +204,7 @@ class AtelierController extends AbstractController
         $entityManager->flush();
 
         if ($error){
-            $response = ['error' =>$error];
+            $response = ['error' => $error];
         }else{
             $response = ["success" => 'ok'];
         }
