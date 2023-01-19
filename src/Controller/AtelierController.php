@@ -124,8 +124,6 @@ class AtelierController extends AbstractController
             }
             $dateAt = $dateAtAtelier;
         }
-        dd($listBddSend);
-
 
         return $this->json([
             "listAteliers" => $listBddSend
