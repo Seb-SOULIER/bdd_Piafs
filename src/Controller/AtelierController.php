@@ -85,7 +85,7 @@ class AtelierController extends AbstractController
         }
 
         $now = new DateTime('now');
-        // $now->sub(new DateInterval('P1D'));
+        $now->sub(new DateInterval('P1D'));
         
         $listBdd = $atelierRepository->findAllAfter($now);
        
@@ -174,6 +174,7 @@ class AtelierController extends AbstractController
     public function inscriptionAtelier(AtelierRepository $atelierRepository, Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
     {
         $user= $this->getUser();
+        $data = json_decode($request->getContent(), true);
 
         if (null === $user) {
             return $this->json([
@@ -181,6 +182,7 @@ class AtelierController extends AbstractController
             ]);
         }
 
+        dd($data);
         if ($user->isIsActive() === true){
             $data = json_decode($request->getContent(), true);
             
@@ -231,6 +233,7 @@ class AtelierController extends AbstractController
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ]);
         }
+
 
         // recupere tous les ateliers
         $ateliers = $atelierRepository->findByUser();
