@@ -197,8 +197,13 @@ class AtelierController extends AbstractController
                 if($alreadyRegistered){
                     $error = $error . $children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit.';
                 }else{
-                    $atelier->addParticipant($children);
-                    $success = $success . $children->getName() . ' ' . $children->getFirstname() . ' est inscrit.';
+                    if($atelier->getPlaceReserved()+1 > $atelier->getPlace()){
+                        $error = $error . "Il n'y a plus de place disponible";
+                    }else{
+                        $atelier->setPlaceReserved($atelier->getPlaceReserved()+1);
+                        $atelier->addParticipant($children);
+                        $success = $success . $children->getName() . ' ' . $children->getFirstname() . ' est inscrit.';
+                    }
                 }
             }
         }
