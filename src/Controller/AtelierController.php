@@ -174,6 +174,7 @@ class AtelierController extends AbstractController
         }
 
         $error="";
+        $success="";
         $atelier = $atelierRepository->findOneBy(['id'=>$data['atelier']['id']]);
 
         $childrens = $data['children'];
@@ -197,7 +198,7 @@ class AtelierController extends AbstractController
                     $error = $error . $children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit.';
                 }else{
                     $atelier->addParticipant($children);
-
+                    $success = $success . $children->getName() . ' ' . $children->getFirstname() . ' est inscrit.';
                 }
             }
         }
@@ -206,7 +207,7 @@ class AtelierController extends AbstractController
         if ($error){
             $response = ['error' => $error];
         }else{
-            $response = ["success" => 'ok'];
+            $response = ["success" => $success];
         }
 
         return $this->json($response);
