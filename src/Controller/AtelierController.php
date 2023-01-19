@@ -158,7 +158,11 @@ class AtelierController extends AbstractController
     }
 
     #[Route('/atelier/inscription', name: 'inscription_atelier')]
-    public function inscriptionAtelier(AtelierRepository $atelierRepository, Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
+    public function inscriptionAtelier( AtelierRepository $atelierRepository,
+                                        Request $request,
+                                        EntityManagerInterface $entityManager,
+                                        ChildrenRepository $childrenRepository
+                                        ): Response
     {
         $user= $this->getUser();
         $data = json_decode($request->getContent(), true);
@@ -169,46 +173,45 @@ class AtelierController extends AbstractController
             ]);
         }
 
-        dd($data);
-        if ($user->isIsActive() === true){
-            $data = json_decode($request->getContent(), true);
-            
-            $atelier = $atelierRepository->findOneBy(['id'=>$data['id']]);
+        $error=[];
+        $atelier = $atelierRepository->findOneBy(['id'=>$data['atelier']['id']]);
 
-            $children = $childrenRepository->findOneBy(['id'=>$data['children']]);
+        $childrens = $data['children'];
 
-            $alreadyRegistered = false;
-
-            foreach($atelier->getParticipants() as $OneParticipant){
-                if($OneParticipant === $children){
-                    $alreadyRegistered = true;
-                }
-            }
-                
-            if ($alreadyRegistered){
-                return $this->json([
-                    "error" => 'Déjà inscrit à l\'atelier'
-                ]);
-            }
-
-            $atelier->addParticipant($children);
-
-            $entityManager->persist($atelier);
-            $entityManager->flush();
-
-            return $this->json([
-                "success" => $user->getLastname(),
-            ]);
-        }else{
-            return $this->json([
-                "error"=>"Compte non activé"
-            ]);
+        foreach ($childrens as $children){
+            $childrensArray[$children[0]] = $children[1];
         }
 
-        return $this->json([
-            "error"=>"Ajout non autorisé"
-        ]);
+        foreach($childrensArray as $key=>$value) {
+            if ($value === true){
+                $children = $childrenRepository->findOneBy(['id'=>$key]);
+                
+                $alreadyRegistered = false;
+                foreach($atelier->getParticipants() as $OneParticipant){
+                    if($OneParticipant === $children){
+                        $alreadyRegistered = true;
+                    }
+                }
+
+                if($alreadyRegistered){
+                    array_push($error, $children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit');    
+                }else{
+                    $atelier->addParticipant($children);
+
+                }
+            }
+        }
+        $entityManager->flush();
+
+        if ($error){
+            $response = $error;
+        }else{
+            $response = ["success" => 'ok'];
+        }
+
+        return $this->json($response);
     }
+    
 
     #[Route('/inscription/user', name: 'inscription_user')]
     public function inscriptionUser(AtelierRepository $atelierRepository): Response
