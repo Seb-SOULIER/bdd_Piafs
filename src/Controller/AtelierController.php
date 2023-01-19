@@ -91,8 +91,7 @@ class AtelierController extends AbstractController
        
         $listBddSend = [];
         
-        $dateAtelier = new DateTime();
-        $dateAt = $dateAtelier->format('Y-m-d');
+        $dateAt = $now->format('Y-m-d');
 
         foreach($listBdd as $atelier) {
             $dateAtAtelier = $atelier->getDate()->format('Y-m-d');
@@ -107,8 +106,8 @@ class AtelierController extends AbstractController
                         'hoursStop' => $atelier->getHourStop(),
                         'intervenant' => $atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
                         'places'=>$atelier->getPlace(),
-                        'placesReserved'=>$atelier->getPlaceReserved()
-                    ]
+                        'placesReserved'=>$atelier->getPlaceReserved(),
+                    ],
                 );
             }else{
                 $listBddSend[$dateAtAtelier] = [[
@@ -125,21 +124,11 @@ class AtelierController extends AbstractController
             }
             $dateAt = $dateAtAtelier;
         }
+        dd($listBddSend);
 
-        $utilbdd = $user->getChildrens();
-
-        $utilisateurs = [];
-
-        foreach($utilbdd as $util) {
-            array_push($utilisateurs,[
-                'id' => $util->getId(),
-                'name' => $util->getName()
-            ]);
-        }
 
         return $this->json([
-            "listAteliers" => $listBddSend,
-            "utilisateurs" => $utilisateurs
+            "listAteliers" => $listBddSend
         ]);
     }
 
