@@ -204,7 +204,7 @@ class AtelierController extends AbstractController
         $entityManager->flush();
 
         if ($error){
-            $response = $error;
+            $response = ['error' =>$error];
         }else{
             $response = ["success" => 'ok'];
         }
