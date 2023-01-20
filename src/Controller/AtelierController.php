@@ -245,18 +245,20 @@ class AtelierController extends AbstractController
                 $ateliers = $adherant->getAteliers();
 
                 foreach($ateliers as $atelier){
-                    array_push($ateliersArray,[
-                        'id'=>$atelier->getId(),
-                        'title'=>$atelier->getName(),
-                        'date'=>$atelier->getDate(),
-                        'hourStart'=>$atelier->getHourStart(),
-                        'hourStop'=>$atelier->getHourStop(),
-                        'description'=>$atelier->getDescription(),
-                        'place'=>$atelier->getPlace(),
-                        'PlaceReserved'=>$atelier->getPlaceReserved(),
-                        'intervenantNom'=>$atelier->getIntervenant()->getLastname(),
-                        'intervenantPrenom'=>$atelier->getIntervenant()->getFirstname()
-                    ]);
+                    if($atelier->getDate() >= new Date()){
+                        array_push($ateliersArray,[
+                            'id'=>$atelier->getId(),
+                            'title'=>$atelier->getName(),
+                            'date'=>$atelier->getDate(),
+                            'hourStart'=>$atelier->getHourStart(),
+                            'hourStop'=>$atelier->getHourStop(),
+                            'description'=>$atelier->getDescription(),
+                            'place'=>$atelier->getPlace(),
+                            'PlaceReserved'=>$atelier->getPlaceReserved(),
+                            'intervenantNom'=>$atelier->getIntervenant()->getLastname(),
+                            'intervenantPrenom'=>$atelier->getIntervenant()->getFirstname()
+                        ]);
+                    }
                 }
 
                 if ($ateliersArray !== []){
