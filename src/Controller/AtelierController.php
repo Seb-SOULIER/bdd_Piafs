@@ -23,7 +23,7 @@ class AtelierController extends AbstractController
 
         if (null === $user) {
             return $this->json([
-                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+                'error' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ]);
         }
 
