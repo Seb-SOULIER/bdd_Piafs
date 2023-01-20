@@ -50,11 +50,24 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/registerEdit', name: 'register_edit')]
-    public function registerEdit(Request $request, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
+    public function registerEdit(
+                                    Request $request,
+                                    EntityManagerInterface $entityManager,
+                                    ValidatorInterface $validator,
+                                    UserRepository $userRepository
+                                    ): Response
     {
         $data = json_decode($request->getContent(), true);
         
-        $user= $this->getUser();
+        $userConnect= $this->getUser();
+
+        if (null === $userConnect) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+
         $user->setLastname($data['lastname']);
         $user->setFirstname($data['firstname']);
 
@@ -66,11 +79,11 @@ class RegistrationController extends AbstractController
         $user->setZipcode($data['zipcode']);
         $user->setCity($data['city']);
         $user->setPhone($data['phone']);
+        $user->setAvatar(rand(1,15).".png");
         
         $entityManager->persist($user);
         $entityManager->flush();
 
-        // $user->setAvatar($data['avatar']);
 
         return $this->json([
             'user'  => $user->getEmail()
@@ -111,11 +124,21 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/registerChildrenEdit', name: 'register_children_edit')]
-    public function registerChildrenEdit(Request $request, EntityManagerInterface $entityManager): Response
+    public function registerChildrenEdit(   Request $request,
+                                            EntityManagerInterface $entityManager,
+                                            UserRepository $userRepository
+                                            ): Response
     {
         $data = json_decode($request->getContent(), true);
         
-        $user= $this->getUser();
+        $userConnect= $this->getUser();
+
+        if (null === $userConnect) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
 
         $childrens = $user->getChildrens();
 
@@ -144,8 +167,6 @@ class RegistrationController extends AbstractController
         $entityManager->persist($children);
         $entityManager->persist($user);
         $entityManager->flush();
-
-        // $user->setAvatar($data['avatar']);
 
         return $this->json([
             'success'  => 'ok',
@@ -187,8 +208,6 @@ class RegistrationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        // $user->setAvatar($data['avatar']);
-
         return $this->json([
             'success'  => 'ok',
         ]);
@@ -205,6 +224,7 @@ class RegistrationController extends AbstractController
         $mydate = getDate(strtotime($data['date']));
         $date = new \DateTime();
         date_date_set($date, $mydate['year'], $mydate['mon'], $mydate['mday']);
+        date_time_set($date,23,59,59);
 
         $children->setActiveAt($date);
         $children->setIsActive(true);

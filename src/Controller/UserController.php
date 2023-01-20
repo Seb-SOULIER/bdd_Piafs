@@ -15,16 +15,18 @@ class UserController extends AbstractController
 {
     #[Route('/recup/user', name: 'recup_user')]
     
-    public function recupUser(): JsonResponse
+    public function recupUser(UserRepository $userRepository): JsonResponse
     {
-        $user = $this->getUser();
-        if (null === $user) {
+        $userConnect = $this->getUser();
+        if (null === $userConnect) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ]);
         }
 
-        $profil=false;
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+
+        $profil = false;
 
         if (
             $user->getLastname() and 
@@ -141,42 +143,43 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/valid/user', name: 'valid_user')]
-    public function validUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
-    {
-        $user= $this->getUser();
-        $data = json_decode($request->getContent(), true);
+    // #[Route('/valid/user', name: 'valid_user')]
+    // public function validUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
+    // {
+    //     $userConnect = $this->getUser();
+    //     $data = json_decode($request->getContent(), true);
 
-        if (null === $user) {
-            return $this->json([
-                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ]);
-        }
+    //     if (null === $userConnect) {
+    //         return $this->json([
+    //             'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+    //         ]);
+    //     }
 
+    //     $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
 
-        if ($user->getRoles() === ['ROLE_ADMIN']){
-            $userValid = $userRepository->findOneBy(['email'=>$data['email']]);
+    //     if ($user->getRoles() === ['ROLE_ADMIN']){
+    //         $userValid = $userRepository->findOneBy(['email'=>$data['email']]);
 
-            $userValid-> setIsActive(true);
+    //         $userValid->setIsActive(true);
 
-            $mydate = getDate(strtotime($data['dateValid']));
-            $dateValid = new \DateTime();
-            date_date_set($dateValid, $mydate['year'], $mydate['mon'], $mydate['mday']);
+    //         $mydate = getDate(strtotime($data['dateValid']));
+    //         $dateValid = new \DateTime();
+    //         date_date_set($dateValid, $mydate['year'], $mydate['mon'], $mydate['mday']);
     
-            $userValid->setActiveAt($dateValid);
+    //         $userValid->setActiveAt($dateValid);
 
-            $entityManager->persist($userValid);
-            $entityManager->flush();
+    //         $entityManager->persist($userValid);
+    //         $entityManager->flush();
  
-            return $this->json([
-                'message' => 'success',
-            ]);
-        }
+    //         return $this->json([
+    //             'message' => 'success',
+    //         ]);
+    //     }
 
-        return $this->json([
-            'message'=>'non'
-        ]);
-    }
+    //     return $this->json([
+    //         'message'=>'non'
+    //     ]);
+    // }
 
     #[Route('/listuser/admin', name: 'listUser')]
     public function recupListUser(Request $request, UserRepository $userRepository, ChildrenRepository $childrenRepository,EntityManagerInterface $entityManager): JsonResponse
@@ -321,81 +324,83 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/addChildren/user', name: 'children_user')]
-    public function addChildrenUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
-    {
-        $user= $this->getUser();
-        $data = json_decode($request->getContent(), true);
+    // #[Route('/addChildren/user', name: 'children_user')]
+    // public function addChildrenUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
+    // {
+    //     $userConnect = $this->getUser();
+    //     $data = json_decode($request->getContent(), true);
 
-        if (null === $user) {
-            return $this->json([
-                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ]);
-        }
+    //     if (null === $userConnect) {
+    //         return $this->json([
+    //             'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+    //         ]);
+    //     }
 
-        $children = new Children();
-        $children->setName($data['name']);
+    //     $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
 
-        if($data['birthdate'] == "15"){
-            $birthdate = new \DateTime();
-        }else{
-            $mydate = getDate(strtotime($data['birthdate']));
-            $birthdate = new \DateTime();
-            date_date_set($birthdate, $mydate['year'], $mydate['mon'], $mydate['mday']);
-        }
+    //     $children = new Children();
+    //     $children->setName($data['name']);
+
+    //     if($data['birthdate'] == "15"){
+    //         $birthdate = new \DateTime();
+    //     }else{
+    //         $mydate = getDate(strtotime($data['birthdate']));
+    //         $birthdate = new \DateTime();
+    //         date_date_set($birthdate, $mydate['year'], $mydate['mon'], $mydate['mday']);
+    //     }
         
-        $children->setBirthdate($birthdate);
-        $children->setParent($user);
+    //     $children->setBirthdate($birthdate);
+    //     $children->setParent($user);
 
-        $entityManager->persist($children);
-        $entityManager->flush();
+    //     $entityManager->persist($children);
+    //     $entityManager->flush();
 
-        $profil=false;
+    //     $profil=false;
 
-        if ($user->isIsActive() === false) {
-            if (
-                $user->getLastname() and 
-                $user->getFirstname() and
-                $user->getBirthdate() and
-                $user->getAddress() and
-                $user->getZipcode() and
-                $user->getCity() and
-                $user->getPhone()
-            ){
-                $profil = true;
-            }
-        }
+    //     if ($user->isIsActive() === false) {
+    //         if (
+    //             $user->getLastname() and 
+    //             $user->getFirstname() and
+    //             $user->getBirthdate() and
+    //             $user->getAddress() and
+    //             $user->getZipcode() and
+    //             $user->getCity() and
+    //             $user->getPhone()
+    //         ){
+    //             $profil = true;
+    //         }
+    //     }
 
-        $childrenArray=[];
-        $childrens = $user->getChildrens();
-        foreach($childrens as $children){
-            array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
-        }
+    //     $childrenArray=[];
+    //     $childrens = $user->getChildrens();
+    //     foreach($childrens as $children){
+    //         array_push($childrenArray,['name'=>$children->getName(),'birthdate'=>$children->getBirthdate()]);
+    //     }
 
 
-        $userSend = [
-            'id'=>$user->getId(),
-            'email'=> $user->getEmail(),
-            'userIdentifier'=>$user->getEmail(),
-            'username'=>$user->getEmail(),
-            'roles'=> $user->getRoles(),
-            'lastname'=> $user->getLastname(),
-            'firstname'=> $user->getFirstname(),
-            'birthdate'=> $user->getBirthdate(),
-            'avatar'=> $user->getAvatar(),
-            'address'=> $user->getAddress(),
-            'zipcode'=>$user->getZipcode(),
-            'city'=>$user->getCity(),
-            'phone'=>$user->getPhone(),
-            'subcribeAt'=> $user->getSubcribeAt(),
-            'isActive'=> $user->isIsActive(),
-            'activeAt'=> $user->getActiveAt(),
-            'children'=>$childrenArray
-        ];
+    //     $userSend = [
+    //         'id'=>$user->getId(),
+    //         'email'=> $user->getEmail(),
+    //         'userIdentifier'=>$user->getEmail(),
+    //         'username'=>$user->getEmail(),
+    //         'roles'=> $user->getRoles(),
+    //         'lastname'=> $user->getLastname(),
+    //         'firstname'=> $user->getFirstname(),
+    //         'birthdate'=> $user->getBirthdate(),
+    //         'avatar'=> $user->getAvatar(),
+    //         'address'=> $user->getAddress(),
+    //         'zipcode'=>$user->getZipcode(),
+    //         'city'=>$user->getCity(),
+    //         'phone'=>$user->getPhone(),
+    //         'subcribeAt'=> $user->getSubcribeAt(),
+    //         'isActive'=> $user->isIsActive(),
+    //         'activeAt'=> $user->getActiveAt(),
+    //         'children'=>$childrenArray
+    //     ];
 
-        return $this->json([
-            'user'  => $userSend,
-            'profil' => $profil
-        ]);
-    }
+    //     return $this->json([
+    //         'user'  => $userSend,
+    //         'profil' => $profil
+    //     ]);
+    // }
 }

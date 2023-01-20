@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Atelier;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
+use App\Repository\UserRepository;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -220,57 +221,84 @@ class AtelierController extends AbstractController
     
 
     #[Route('/inscription/user', name: 'inscription_user')]
-    public function inscriptionUser(AtelierRepository $atelierRepository): Response
+    public function inscriptionUser(UserRepository $userRepository): Response
     {
-        $user= $this->getUser();
-
-        if (null === $user) {
+        $userConnect = $this->getUser();
+        
+        if (null === $userConnect) {
             return $this->json([
                 'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ]);
         }
 
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
 
-        // recupere tous les ateliers
-        $ateliers = $atelierRepository->findByUser();
+        // recupere tous les adherants
+        $adherants = $user->getChildrens();
 
         $reservationSend=[];
 
-        // Pour chaque atelier
-        foreach ($ateliers as $atelier){
-            
-            $participantArray=[];
-            
-            foreach($atelier->getParticipants() as $participant){
-                if($participant->getParent() === $user){
-                    array_push($participantArray,['name'=>$participant->getName(),'id'=>$participant->getId()]);
+        foreach($adherants as $adherant){
+            if ($adherant->isIsActive()){
+                
+                $ateliersArray=[];
+                $ateliers = $adherant->getAteliers();
+                
+                foreach($ateliers as $atelier){
+                    array_push($ateliersArray,[
+                        'id'=>$atelier->getId(),
+                        'title'=>$atelier->getName(),
+                        'date'=>$atelier->getDate(),
+                        'hourStart'=>$atelier->getHourStart(),
+                        'hourStop'=>$atelier->getHourStop(),
+                        'description'=>$atelier->getDescription(),
+                        'place'=>$atelier->getPlace(),
+                        'PlaceReserved'=>$atelier->getPlaceReserved()
+                    ]);
                 }
-            }
-           
-            if(!empty($participantArray)){
-                array_push($reservationSend, [
-                    'title'=>$atelier->getDate(),
-                    'id'=>$atelier->getId(),
-                    'data'=> [[
-                        "atelier"=>$atelier->getName(),
-                        "id"=>$atelier->getId(),
-                        "intervenant"=>$atelier->getIntervenant()->getLastname(). " " . $atelier->getIntervenant()->getFirstname(),
-                        "dateStart"=>$atelier->getHourStart(),
-                        "dateStop"=>$atelier->getHourStop(),
-                        "participant"=> $participantArray
-                    ]]
-                ]);
+
+                if ($ateliersArray !== []){
+                    array_push($reservationSend,[
+                        'id'=>$adherant->getId(),
+                        'name'=>$adherant->getName(),
+                        'firstname'=>$adherant->getFirstname(),
+                        'birthdate'=>$adherant->getBirthdate(),
+                        'isActive'=>$adherant->isIsActive(),
+                        'activeAt'=>$adherant->getActiveAt(),
+                        'ateliers'=>$ateliersArray,
+                    ]);
+                }
             }
         }
 
+        $userSend=[];
+        array_push($userSend,[
+            'id'=>$user->getId(),
+            'email'=>$user->getEmail(),
+            'roles'=>$user->getRoles(),
+            'lastname'=>$user->getLastname(),
+            'firstname'=>$user->getFirstname(),
+            'birhdate'=>$user->getBirthdate(),
+            'address'=>$user->getAddress(),
+            'zipcode'=>$user->getZipcode(),
+            'city'=>$user->getCity(),
+            'phone'=>$user->getPhone()
+        ]);
+
+        $error = "";
         if($reservationSend === []){
-            array_push($reservationSend, [
-                'title'=> 'Pas de reservation',
-            ]);
+            $error = 'Pas de reservation';
         }
         
+        if($error){
+            return $this->json([
+                'error'=> $error
+            ]);
+        }
+
         return $this->json([
             'section'=> $reservationSend,
+            'user'=>$userSend,
         ]);
     }
 
