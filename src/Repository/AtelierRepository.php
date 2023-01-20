@@ -68,6 +68,38 @@ class AtelierRepository extends ServiceEntityRepository
         ->getQuery()
         ->getResult()
     ;
+    }
+
+    /**
+    * @return Atelier[] Returns an array of Atelier objects
+    */
+    public function findByAdmin(): array
+    {
+        return $this->createQueryBuilder('a')
+        ->andWhere('a.date >= :val')
+        ->setParameter('val', new DateTime())
+        ->orderBy('a.hourStart', 'ASC')
+        ->getQuery()
+        ->getResult()
+    ;
+    }
+
+    /**
+    * @return Atelier[] Returns an array of Atelier objects
+    */
+    public function findByInter($user): array
+    {
+        return $this->createQueryBuilder('a')
+        ->andWhere('a.date >= :val')
+        ->andWhere('a.intervenant = :val2')
+        ->setParameter('val', new DateTime())
+        ->setParameter('val2', $user)
+        ->orderBy('a.hourStart', 'ASC')
+        ->getQuery()
+        ->getResult()
+    ;
+    }
+
         // return $this->createQueryBuilder('a')
         // //    ->andWhere('a.date => :date')
         // //    ->setParameter('user', $user)
@@ -76,7 +108,6 @@ class AtelierRepository extends ServiceEntityRepository
         //    ->getQuery()
         //    ->getResult()
         // ;
-    }
 //    /**
 //     * @return Atelier[] Returns an array of Atelier objects
 //     */

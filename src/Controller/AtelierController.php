@@ -306,6 +306,87 @@ class AtelierController extends AbstractController
         ]);
     }
 
+    #[Route('/atelier/admin', name: 'atelier_admin')]
+    public function atelierAdmin(   UserRepository $userRepository,
+                                    AtelierRepository $atelierRepository
+                                    ): Response
+    {
+        $userConnect = $this->getUser();
+        
+        if (null === $userConnect) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+
+        if ($user->getRoles() == ['ROLE_ADMIN']){
+            $ateliers = $atelierRepository->findByAdmin();
+        }else{
+            $ateliers = $atelierRepository->findByInter($user);
+        }
+
+        $ateliersArray=[];
+
+        foreach($ateliers as $atelier){
+
+            $atelierParticipants = [];
+            foreach( $atelier->getParticipants() as $participant){
+                array_push($atelierParticipants,[
+                    'id'=>$participant->getId(),
+                    'name'=>$participant->getName(),
+                    'firstname'=>$participant->getFirstname(),
+                    'birthdate'=>$participant->getBirthdate(),
+                    'isActive'=>$participant->isIsActive(),
+                    'activeAt'=>$participant->getActiveAt(),
+                    
+                    'idUser'=>$participant->getParent()->getId(),
+                    'email'=>$participant->getParent()->getEmail(),
+                    'roles'=>$participant->getParent()->getRoles(),
+                    'lastname'=>$participant->getParent()->getLastname(),
+                    'firstname'=>$participant->getParent()->getFirstname(),
+                    'birhdate'=>$participant->getParent()->getBirthdate(),
+                    'address'=>$participant->getParent()->getAddress(),
+                    'zipcode'=>$participant->getParent()->getZipcode(),
+                    'city'=>$participant->getParent()->getCity(),
+                    'phone'=>$participant->getParent()->getPhone()
+                ]);
+            }
+
+            array_push($ateliersArray,[
+                'id'=>$atelier->getId(),
+                'title'=>$atelier->getName(),
+                'date'=>$atelier->getDate(),
+                'hourStart'=>$atelier->getHourStart(),
+                'hourStop'=>$atelier->getHourStop(),
+                'description'=>$atelier->getDescription(),
+                'place'=>$atelier->getPlace(),
+                'PlaceReserved'=>$atelier->getPlaceReserved(),
+                'instervenantId'=>$atelier->getIntervenant()->getId(), 
+                'intervenantNom'=>$atelier->getIntervenant()->getLastname(),
+                'intervenantPrenom'=>$atelier->getIntervenant()->getFirstname(),
+                'participants'=> $atelierParticipants
+            ]);
+
+        }
+
+        $error = "";
+        if($ateliersArray === []){
+            $error = 'Pas d\'ateliers';
+        }
+        
+        if($error){
+            return $this->json([
+                'error'=> $error
+            ]);
+        }
+
+        return $this->json([
+            'section'=> $ateliersArray
+        ]);
+    }
+
     #[Route('/atelier/unsubscibe', name: 'unsubscibe_atelier')]
     public function unsubscibeAtelier(Request $request, AtelierRepository $atelierRepository, ChildrenRepository $childrenRepository, EntityManagerInterface $entityManager): Response
     {
