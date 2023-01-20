@@ -334,6 +334,7 @@ class AtelierController extends AbstractController
             $atelierParticipants = [];
             foreach( $atelier->getParticipants() as $participant){
                 array_push($atelierParticipants,[
+                    'idAtelier'=>$atelier->getId(),
                     'id'=>$participant->getId(),
                     'name'=>$participant->getName(),
                     'firstname'=>$participant->getFirstname(),
