@@ -265,7 +265,7 @@ class AtelierController extends AbstractController
                         'birthdate'=>$adherant->getBirthdate(),
                         'isActive'=>$adherant->isIsActive(),
                         'activeAt'=>$adherant->getActiveAt(),
-                        'ateliers'=>$ateliersArray,
+                        'data'=>$ateliersArray,
                     ]);
                 }
             }
