@@ -245,7 +245,7 @@ class AtelierController extends AbstractController
                 $ateliers = $adherant->getAteliers();
 
                 foreach($ateliers as $atelier){
-                    // if($atelier->getDate() >= new Date()){
+                    if($atelier->getDate() > new DateTime()){
                         array_push($ateliersArray,[
                             'id'=>$atelier->getId(),
                             'title'=>$atelier->getName(),
@@ -258,7 +258,7 @@ class AtelierController extends AbstractController
                             'intervenantNom'=>$atelier->getIntervenant()->getLastname(),
                             'intervenantPrenom'=>$atelier->getIntervenant()->getFirstname()
                         ]);
-                    // }
+                    }
                 }
 
                 if ($ateliersArray !== []){
