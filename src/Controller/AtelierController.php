@@ -366,7 +366,7 @@ class AtelierController extends AbstractController
                 'instervenantId'=>$atelier->getIntervenant()->getId(), 
                 'intervenantNom'=>$atelier->getIntervenant()->getLastname(),
                 'intervenantPrenom'=>$atelier->getIntervenant()->getFirstname(),
-                'participants'=> $atelierParticipants
+                'data'=> $atelierParticipants
             ]);
 
         }
