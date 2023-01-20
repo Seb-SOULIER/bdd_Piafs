@@ -371,7 +371,6 @@ class AtelierController extends AbstractController
 
         }
 
-        $ateliersArray=[];
         $error = "";
         if($ateliersArray === []){
             $error = 'Pas d\'ateliers';
