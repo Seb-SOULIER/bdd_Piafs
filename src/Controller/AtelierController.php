@@ -127,6 +127,29 @@ class AtelierController extends AbstractController
         ]);
     }
 
+    #[Route('/atelier/delete', name: 'delete_atelier')]
+    public function deleteAtelier(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository): Response
+    {
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->json([
+                'error' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $data = json_decode($request->getContent(), true);
+
+        if($user->getRoles() === ['ROLE_INTER'] or $user->getRoles() === ['ROLE_ADMIN']){
+            $atelier = $atelierRepository->findOneBy(['id'=>$data['id']]);
+            $success = 'L\'atelier "'. $atelier->getName() . '" a été supprimé avec succès.';
+            $entityManager->remove($atelier);
+            $entityManager->flush();
+        }
+
+        return $this->json( ["success" => $success]);
+    }
+
     #[Route('/atelier/list', name: 'list_atelier')]
     public function listAtelier(AtelierRepository $atelierRepository): Response
     {   
