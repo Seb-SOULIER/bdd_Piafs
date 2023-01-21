@@ -18,7 +18,9 @@ use Symfony\Component\Validator\Constraints\Date;
 class AtelierController extends AbstractController
 {
     #[Route('/atelier/add', name: 'add_atelier')]
-    public function addAtelier(Request $request, EntityManagerInterface $entityManager): Response
+    public function addAtelier( Request $request,
+                                EntityManagerInterface $entityManager,
+                                AtelierRepository $atelierRepository): Response
     {
         $user= $this->getUser();
 
@@ -31,24 +33,15 @@ class AtelierController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if($user->getRoles() === ['ROLE_INTER'] or $user->getRoles() === ['ROLE_ADMIN']){
-            $atelier = new Atelier;
-            $atelier->setName($data['name']);
-            $atelier->setDescription($data['description']);
-            $atelier->setPlace($data['place']);
-            $atelier->setPlaceReserved(0);
 
             $dateAtel = getDate(strtotime($data['dateAddAtelier']));
             $dateAtelier = new \DateTime();
             date_date_set($dateAtelier, $dateAtel['year'], $dateAtel['mon'], $dateAtel['mday']);
-
-            $atelier->setDate($dateAtelier);
-
+            
             $StartAtel = getDate(strtotime($data['timeStartAddAtelier']));
             $AtelierStartAt = new \DateTime();
             date_date_set($AtelierStartAt, $dateAtel['year'], $dateAtel['mon'], $dateAtel['mday']);
             date_time_set($AtelierStartAt, $StartAtel['hours'], $StartAtel['minutes']);
-
-            $atelier->setHourStart($AtelierStartAt);
 
             $StopAtel = getDate(strtotime($data['timeStopAddAtelier']));
             $AtelierStopAt = new \DateTime();
@@ -56,6 +49,38 @@ class AtelierController extends AbstractController
             date_time_set($AtelierStopAt, $StopAtel['hours'], $StopAtel['minutes']);
 
 
+             // verifie si la place est libre
+            $allReserved = [];
+            $ateliersMemeJour = $atelierRepository->findBy(['date' => $dateAtelier]);
+
+            foreach($ateliersMemeJour as $atelierMemeJour){
+                if( ($AtelierStartAt >= $atelierMemeJour->getHourStart()) && ($AtelierStartAt <  $atelierMemeJour->getHourStop()) ){
+                    array_push($allReserved,$atelierMemeJour);
+                }
+                if( ($AtelierStopAt > $atelierMemeJour->getHourStart()) && ($AtelierStopAt <=  $atelierMemeJour->getHourStop()) ){
+                    array_push($allReserved,$atelierMemeJour);
+                }
+            }
+
+            
+            if($allReserved){
+                return $this->json([
+                    'error'=> 'Impossible d\'ajouter l\'atelier, l\'atelier "'
+                    . $allReserved[0]->getName()
+                    . ' a lieu le '. $allReserved[0]->getDate()->format('d/m/Y') . ' de '
+                    . $allReserved[0]->getHourStart() ->format('H:i') . ' à '
+                    . $allReserved[0]->getHourStop() ->format('H:i')
+                ]);    
+            }
+
+            $atelier = new Atelier;
+            $atelier->setName($data['name']);
+            $atelier->setDescription($data['description']);
+            $atelier->setPlace($data['place']);
+            $atelier->setPlaceReserved(0);
+
+            $atelier->setDate($dateAtelier);
+            $atelier->setHourStart($AtelierStartAt);
             $atelier->setHourStop($AtelierStopAt);
             
             $atelier->setIntervenant($user);
