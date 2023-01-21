@@ -398,13 +398,14 @@ class AtelierController extends AbstractController
                     'idUser'=>$participant->getParent()->getId(),
                     'email'=>$participant->getParent()->getEmail(),
                     'roles'=>$participant->getParent()->getRoles(),
-                    'lastname'=>$participant->getParent()->getLastname(),
-                    'firstname'=>$participant->getParent()->getFirstname(),
-                    'birhdate'=>$participant->getParent()->getBirthdate(),
+                    'lastnameUser'=>$participant->getParent()->getLastname(),
+                    'firstnameUser'=>$participant->getParent()->getFirstname(),
+                    'birhdateUser'=>$participant->getParent()->getBirthdate(),
                     'address'=>$participant->getParent()->getAddress(),
                     'zipcode'=>$participant->getParent()->getZipcode(),
                     'city'=>$participant->getParent()->getCity(),
-                    'phone'=>$participant->getParent()->getPhone()
+                    'phone'=>$participant->getParent()->getPhone(),
+                    'avatar'=>$participant->getParent()->getAvatar()
                 ]);
             }
 
