@@ -272,6 +272,40 @@ class AtelierController extends AbstractController
         return $this->json($response);
     }
     
+    
+    #[Route('/atelier/desinscription', name: 'desinscription_atelier')]
+    public function desinscriptionAtelier( AtelierRepository $atelierRepository,
+                                        Request $request,
+                                        EntityManagerInterface $entityManager,
+                                        ChildrenRepository $childrenRepository
+                                        ): Response
+    {
+        $user= $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (null === $user) {
+            return $this->json([
+                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        $success="";
+        $atelier = $atelierRepository->findOneBy(['id'=>$data['idatelier']]);
+
+        $children = $childrenRepository->findOneBy(['id'=>$data['idParticipant']]);
+
+        $atelier->removeParticipant($children);
+        $atelier->setPlaceReserved($atelier->getPlaceReserved()-1);
+
+        $success="";
+        $success = $success . $children->getName() . ' ' . $children->getFirstname() . ' est désincrit.';
+
+        $entityManager->flush();
+
+        return $this->json([
+            "success" => $success
+        ]);
+    }
 
     #[Route('/inscription/user', name: 'inscription_user')]
     public function inscriptionUser(UserRepository $userRepository): Response
