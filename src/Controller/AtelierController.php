@@ -89,7 +89,7 @@ class AtelierController extends AbstractController
             $entityManager->flush();
 
             return $this->json([
-                'success'=>'ok'
+                'success'=>'L\'atelier '. $atelier->getName() . ' est ajouté à la liste des ateliers.'
             ]);
         }
 
