@@ -290,7 +290,7 @@ class AtelierController extends AbstractController
         }
 
         $success="";
-        $atelier = $atelierRepository->findOneBy(['id'=>$data['idatelier']]);
+        $atelier = $atelierRepository->findOneBy(['id'=>$data['idAtelier']]);
 
         $children = $childrenRepository->findOneBy(['id'=>$data['idParticipant']]);
 
