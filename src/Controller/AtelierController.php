@@ -118,7 +118,7 @@ class AtelierController extends AbstractController
             $entityManager->flush();
 
             return $this->json([
-                'success'=>'ok'
+                'success'=>'Modification de l\'atelier '. $atelier->getName() . ' réalisé avec succès.'
             ]);
         }
 
