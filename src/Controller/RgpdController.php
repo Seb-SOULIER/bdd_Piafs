@@ -11,7 +11,7 @@ class RgpdController extends AbstractController
     #[Route('/app/rgpd/privacy', name: 'app_rgpd_privacy')]
     public function privacy(): Response
     {
-        $privacy = "Politique de confidentialite </br> coucou";
+        $privacy = "Politique de confidentialite /br coucou";
 
         return $this->json(
             $privacy,
