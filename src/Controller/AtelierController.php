@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Atelier;
+use App\Entity\Comment;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -314,10 +316,22 @@ class AtelierController extends AbstractController
                         $atelier->setPlaceReserved($atelier->getPlaceReserved()+1);
                         $atelier->addParticipant($children);
                         $success = $success . $children->getName() . ' ' . $children->getFirstname() . ' est inscrit.';
+
+                        if($data['comment'] !== ""){
+                            $comment = new Comment;
+                            $comment->setIntervenant($atelier->getIntervenant());
+                            $comment->setAddAt(new DateTimeImmutable());
+                            $comment->setAdherant($children);
+                            $comment->setComment($data['comment']);
+                            $entityManager->persist($comment);
+                        }
                     }
                 }
             }
         }
+
+        
+
         $entityManager->flush();
 
         if ($error){
