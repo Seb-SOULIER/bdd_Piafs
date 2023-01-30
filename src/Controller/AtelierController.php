@@ -17,7 +17,7 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class AtelierController extends AbstractController
 {
-    #[Route('/atelier/add', name: 'add_atelier')]
+    #[Route('/app/atelier/add', name: 'add_atelier')]
     public function addAtelier( Request $request,
                                 EntityManagerInterface $entityManager,
                                 AtelierRepository $atelierRepository): Response
@@ -98,7 +98,7 @@ class AtelierController extends AbstractController
         ]);
     }
 
-    #[Route('/atelier/edit', name: 'edit_atelier')]
+    #[Route('/app/atelier/edit', name: 'edit_atelier')]
     public function editAtelier(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository): Response
     {
         $user= $this->getUser();
@@ -152,7 +152,7 @@ class AtelierController extends AbstractController
         ]);
     }
 
-    #[Route('/atelier/delete', name: 'delete_atelier')]
+    #[Route('/app/atelier/delete', name: 'delete_atelier')]
     public function deleteAtelier(Request $request, EntityManagerInterface $entityManager, AtelierRepository $atelierRepository): Response
     {
         $user= $this->getUser();
@@ -175,7 +175,7 @@ class AtelierController extends AbstractController
         return $this->json( ["success" => $success]);
     }
 
-    #[Route('/atelier/list', name: 'list_atelier')]
+    #[Route('/app/atelier/list', name: 'list_atelier')]
     public function listAtelier(AtelierRepository $atelierRepository): Response
     {   
         $user= $this->getUser();
@@ -233,7 +233,7 @@ class AtelierController extends AbstractController
     }
 
 
-    #[Route('/atelier/children', name: 'list_children')]
+    #[Route('/app/adherant/list', name: 'list_children')]
     public function listchildren(ChildrenRepository $childrenRepository): Response
     {  
         $user= $this->getUser();
@@ -259,7 +259,7 @@ class AtelierController extends AbstractController
         ]);
     }
 
-    #[Route('/atelier/inscription', name: 'inscription_atelier')]
+    #[Route('/app/atelier/register', name: 'inscription_atelier')]
     public function inscriptionAtelier( AtelierRepository $atelierRepository,
                                         Request $request,
                                         EntityManagerInterface $entityManager,
@@ -321,7 +321,7 @@ class AtelierController extends AbstractController
     }
     
     
-    #[Route('/atelier/desinscription', name: 'desinscription_atelier')]
+    #[Route('/app/atelier/unregister', name: 'desinscription_atelier')]
     public function desinscriptionAtelier( AtelierRepository $atelierRepository,
                                         Request $request,
                                         EntityManagerInterface $entityManager,
@@ -355,7 +355,7 @@ class AtelierController extends AbstractController
         ]);
     }
 
-    #[Route('/inscription/user', name: 'inscription_user')]
+    #[Route('/app/atelier/registerUser', name: 'inscription_user')]
     public function inscriptionUser(UserRepository $userRepository): Response
     {
         $userConnect = $this->getUser();
@@ -441,7 +441,7 @@ class AtelierController extends AbstractController
         ]);
     }
 
-    #[Route('/atelier/admin', name: 'atelier_admin')]
+    #[Route('/app/admin/atelier/list', name: 'atelier_admin')]
     public function atelierAdmin(   UserRepository $userRepository,
                                     AtelierRepository $atelierRepository
                                     ): Response
@@ -521,32 +521,6 @@ class AtelierController extends AbstractController
 
         return $this->json([
             'section'=> $ateliersArray
-        ]);
-    }
-
-    #[Route('/atelier/unsubscibe', name: 'unsubscibe_atelier')]
-    public function unsubscibeAtelier(Request $request, AtelierRepository $atelierRepository, ChildrenRepository $childrenRepository, EntityManagerInterface $entityManager): Response
-    {
-        $user= $this->getUser();
-
-        if (null === $user) {
-            return $this->json([
-                'message' => 'Erreur Utilisateur - Merci de vous reconnecter',
-            ]);
-        }
-
-        $data = json_decode($request->getContent(), true);
-
-        $atelier = $atelierRepository->findById($data['atelier']);
-        $children = $childrenRepository->findById($data['participant']);
-
-        if (!empty($children) and !empty($atelier)){
-            $atelier[0]->removeParticipant($children[0]);
-            $entityManager->flush();
-        }
-
-        return $this->json([
-            'error'=> 'success',
         ]);
     }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
+    #[Route('/app/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager,ValidatorInterface $validator): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -31,6 +31,7 @@ class RegistrationController extends AbstractController
                 $data['password']
             )
         );
+        $user->setAvatar(rand(1,15).".png");
 
         $errors = $validator->validate($user);
 
@@ -49,7 +50,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerEdit', name: 'register_edit')]
+    #[Route('/app/user/edit', name: 'register_edit')]
     public function registerEdit(
                                     Request $request,
                                     EntityManagerInterface $entityManager,
@@ -79,7 +80,6 @@ class RegistrationController extends AbstractController
         $user->setZipcode($data['zipcode']);
         $user->setCity($data['city']);
         $user->setPhone($data['phone']);
-        $user->setAvatar(rand(1,15).".png");
         
         $entityManager->persist($user);
         $entityManager->flush();
@@ -90,7 +90,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerAdminEdit', name: 'register_admin_edit')]
+    #[Route('/app/admin/user/edit', name: 'register_admin_edit')]
     public function registerAdminEdit(
                                         Request $request,
                                         EntityManagerInterface $entityManager,
@@ -123,7 +123,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerChildrenEdit', name: 'register_children_edit')]
+    #[Route('/app/adherant/edit', name: 'register_children_edit')]
     public function registerChildrenEdit(   Request $request,
                                             EntityManagerInterface $entityManager,
                                             UserRepository $userRepository
@@ -173,7 +173,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerAdminChildrenEdit', name: 'register_Admin_children_edit')]
+    #[Route('/app/admin/adherant/edit', name: 'register_Admin_children_edit')]
     public function registerAdminChildrenEdit(Request $request, EntityManagerInterface $entityManager,UserRepository $userRepository): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -214,7 +214,7 @@ class RegistrationController extends AbstractController
     }
 
     
-    #[Route('/registerAdminChildrenActive', name: 'register_Admin_children_active')]
+    #[Route('/app/adherant/active', name: 'register_Admin_children_active')]
     public function registerAdminChildrenActive(Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -237,7 +237,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
-    #[Route('/registerAdminChildrenDesactive', name: 'register_Admin_children_desactive')]
+    #[Route('/app/adherant/inactive', name: 'register_Admin_children_desactive')]
     public function registerAdminChildrenDesactive(Request $request, EntityManagerInterface $entityManager,ChildrenRepository $childrenRepository): Response
     {
         $data = json_decode($request->getContent(), true);
@@ -258,7 +258,7 @@ class RegistrationController extends AbstractController
     }
 
 
-    #[Route('/registerAdminChildrenSuppr', name: 'register_Admin_children_Suppr')]
+    #[Route('/app/adherant/delete', name: 'register_Admin_children_Suppr')]
     public function registerAdminChildrenSuppr(Request $request, EntityManagerInterface $entityManager, ChildrenRepository $childrenRepository): Response
     {
         $data = json_decode($request->getContent(), true);

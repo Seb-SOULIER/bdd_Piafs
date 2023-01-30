@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserController extends AbstractController
 {
-    #[Route('/recup/user', name: 'recup_user')]
+    #[Route('/app/user/recup', name: 'recup_user')]
     
     public function recupUser(UserRepository $userRepository): JsonResponse
     {
@@ -77,7 +77,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/recup/AdminUser', name: 'recup_Adminuser')]
+    #[Route('/app/admin/user/select', name: 'recup_Adminuser')]
     
     public function recupAdminUser(UserRepository $userRepository, Request $request): JsonResponse
     {
@@ -181,7 +181,7 @@ class UserController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/listuser/admin', name: 'listUser')]
+    #[Route('/app/user/list', name: 'listUser')]
     public function recupListUser(Request $request, UserRepository $userRepository, ChildrenRepository $childrenRepository,EntityManagerInterface $entityManager): JsonResponse
     {
         $user= $this->getUser();
@@ -293,7 +293,7 @@ class UserController extends AbstractController
     }
 
 
-    #[Route('/role/user', name: 'role_user')]
+    #[Route('/app/user/role', name: 'role_user')]
     public function roleUser(EntityManagerInterface $entityManager, UserRepository $userRepository, Request $request): JsonResponse
     {
         $user= $this->getUser();
