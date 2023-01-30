@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RgpdController extends AbstractController
 {
-    #[Route('/rgpd/privacy', name: 'app_rgpd_privacy')]
+    #[Route('/app/rgpd/privacy', name: 'app_rgpd_privacy')]
     public function privacy(): Response
     {
         $privacy = "coucou";
@@ -18,7 +18,7 @@ class RgpdController extends AbstractController
         );
     }
 
-    #[Route('/rgpd/terms', name: 'app_rgpd_terms')]
+    #[Route('/app/rgpd/terms', name: 'app_rgpd_terms')]
     public function terms(): Response
     {
         $terms = "coucou";
