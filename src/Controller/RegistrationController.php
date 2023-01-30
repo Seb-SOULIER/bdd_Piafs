@@ -101,7 +101,7 @@ class RegistrationController extends AbstractController
         $data = json_decode($request->getContent(), true);
         
         $user= $userRepository->findOneBy(['id'=>$data['id']]);
-        $user->setLastname($data['lastname']);
+        $user->setLastname(strtoupper($data['lastname']));
         $user->setFirstname($data['firstname']);
 
         $mydate = getDate(strtotime($data['birthdate']));
@@ -153,7 +153,7 @@ class RegistrationController extends AbstractController
         }
 
         $children = new Children();
-        $children->setName($data['name']);
+        $children->setName(strtoupper($data['name']));
         $children->setFirstname($data['firstname']);
         $children->setIsActive(false);
         
@@ -193,7 +193,7 @@ class RegistrationController extends AbstractController
         }
 
         $children = new Children();
-        $children->setName($data['name']);
+        $children->setName(strtoupper($data['name']));
         $children->setFirstname($data['firstname']);
         $children->setIsActive(false);
         
