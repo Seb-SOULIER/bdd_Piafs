@@ -171,14 +171,17 @@ class AtelierController extends AbstractController
             $atelier = $atelierRepository->findOneBy(['id'=>$data['id']]);
             
             if(count($atelier->getParticipants()) > 0){
+                $error = "Impossible de supprimer l'atelier, il reste des inscrits!";
+            }else{
                 $success = 'L\'atelier "'. $atelier->getName() . '" a été supprimé avec succès.';
                 $entityManager->remove($atelier);
                 $entityManager->flush();
-            }else{
-                $error = "Impossible de supprimer l'atelier, il reste des inscrits!";
             }
         }
-        return $this->json( ["success" => $success]);
+        return $this->json([
+            "success" => $success,
+            "error" => $error
+        ]);
     }
 
     #[Route('/app/atelier/list', name: 'list_atelier')]
