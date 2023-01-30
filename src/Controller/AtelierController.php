@@ -6,6 +6,7 @@ use App\Entity\Atelier;
 use App\Entity\Comment;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
+use App\Repository\CommentRepository;
 use App\Repository\UserRepository;
 use DateInterval;
 use DateTime;
@@ -330,8 +331,6 @@ class AtelierController extends AbstractController
             }
         }
 
-        
-
         $entityManager->flush();
 
         if ($error){
@@ -466,7 +465,8 @@ class AtelierController extends AbstractController
 
     #[Route('/app/admin/atelier/list', name: 'atelier_admin')]
     public function atelierAdmin(   UserRepository $userRepository,
-                                    AtelierRepository $atelierRepository
+                                    AtelierRepository $atelierRepository,
+                                    CommentRepository $commentRepository
                                     ): Response
     {
         $userConnect = $this->getUser();
@@ -491,6 +491,16 @@ class AtelierController extends AbstractController
 
             $atelierParticipants = [];
             foreach( $atelier->getParticipants() as $participant){
+                
+                $comments = $commentRepository->findBy(['intervenant'=>$atelier->getIntervenant(),'adherant'=>$participant],['addAt'=>'DESC']);
+                $commentsSend=[];
+                foreach($comments as $comment){
+                    array_push($commentsSend,[
+                        'addAt'=>$comment->getAddAt(),
+                        'comment'=>$comment->getComment()
+                    ]);
+                }
+
                 array_push($atelierParticipants,[
                     'idAtelier'=>$atelier->getId(),
                     'id'=>$participant->getId(),
@@ -499,6 +509,8 @@ class AtelierController extends AbstractController
                     'birthdate'=>$participant->getBirthdate(),
                     'isActive'=>$participant->isIsActive(),
                     'activeAt'=>$participant->getActiveAt(),
+                    'comment'=>$commentsSend,
+                    'nbrComment'=>count($comments),
                     
                     'idUser'=>$participant->getParent()->getId(),
                     'email'=>$participant->getParent()->getEmail(),
