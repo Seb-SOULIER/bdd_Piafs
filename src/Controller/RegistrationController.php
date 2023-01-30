@@ -69,7 +69,7 @@ class RegistrationController extends AbstractController
         }
         $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
 
-        $user->setLastname($data['lastname']);
+        $user->setLastname(strtoupper($data['lastname']));
         $user->setFirstname($data['firstname']);
 
         $mydate = getDate(strtotime($data['birthdate']));
