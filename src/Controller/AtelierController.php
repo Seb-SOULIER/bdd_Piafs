@@ -164,14 +164,20 @@ class AtelierController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+        $success="";
+        $error="";
 
         if($user->getRoles() === ['ROLE_INTER'] or $user->getRoles() === ['ROLE_ADMIN']){
             $atelier = $atelierRepository->findOneBy(['id'=>$data['id']]);
-            $success = 'L\'atelier "'. $atelier->getName() . '" a été supprimé avec succès.';
-            $entityManager->remove($atelier);
-            $entityManager->flush();
+            
+            if(count($atelier->getParticipants()) > 0){
+                $success = 'L\'atelier "'. $atelier->getName() . '" a été supprimé avec succès.';
+                $entityManager->remove($atelier);
+                $entityManager->flush();
+            }else{
+                $error = "Impossible de supprimer l'atelier, il reste des inscrits!";
+            }
         }
-
         return $this->json( ["success" => $success]);
     }
 
