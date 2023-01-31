@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\ActualiteRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,5 +44,24 @@ class ActualiteController extends AbstractController
         return $this->json(
             $listActualiteSerialize,
         );
+    }
+
+    #[Route('/app/actualite/add', name: 'app_actualite_add')]
+    public function add(ActualiteRepository $actualiteRepository, UserRepository $userRepository): Response
+    {
+        
+        if (null === $this->getUser()) {
+            return $this->json([
+                'Error' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        if ($this->isGranted('ROLE_ADMIN')){
+
+        }
+        
+        return $this->json([
+            'Error' => 'Error',
+        ]);
     }
 }
