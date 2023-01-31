@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints\Date;
 
 class ActualiteController extends AbstractController
 {
-    #[Route('/app/actualite', name: 'app_actualite')]
+    #[Route('/app/actualite/list', name: 'app_actualite_list')]
     public function index(ActualiteRepository $actualiteRepository): Response
     {
         $listActualite = $actualiteRepository->find3last();
@@ -27,7 +27,7 @@ class ActualiteController extends AbstractController
                     'id' => $actualite->getId(),
                     'title' => $actualite->getTitle(),
                     'description' => $actualite->getDescription(),
-                    // 'date' => $actualite->getDateAt(),
+                    'date' => $actualite->getDateAt(),
                     'author' => $actualite->getAuthor()->getLastname(). ' ' . $actualite->getAuthor()->getFirstname(),
                 ]
             );
