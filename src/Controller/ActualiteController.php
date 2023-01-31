@@ -70,7 +70,7 @@ class ActualiteController extends AbstractController
             $actualite->setTitle($data['title']);
             $actualite->setDescription($data['description']);
             $actualite->setAuthor($userRepository->findOneBy(['id'=>$this->getUser()]));
-            $actualite->setDate(new DateTime());
+            $actualite->setDateAt(new DateTime());
             $entityManager->persist($actualite);
             $entityManager->flush();
             return $this->json([
