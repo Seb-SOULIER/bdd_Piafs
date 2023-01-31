@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Actualite;
 use App\Repository\ActualiteRepository;
 use App\Repository\UserRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
@@ -47,21 +51,35 @@ class ActualiteController extends AbstractController
     }
 
     #[Route('/app/actualite/add', name: 'app_actualite_add')]
-    public function add(ActualiteRepository $actualiteRepository, UserRepository $userRepository): Response
+    public function add(    ActualiteRepository $actualiteRepository,
+                            UserRepository $userRepository,
+                            Request $request,
+                            EntityManagerInterface $entityManager
+                            ): Response
     {
         
         if (null === $this->getUser()) {
             return $this->json([
-                'Error' => 'Erreur Utilisateur - Merci de vous reconnecter',
+                'error' => 'Erreur Utilisateur - Merci de vous reconnecter',
             ]);
         }
 
         if ($this->isGranted('ROLE_ADMIN')){
-
+            $data = json_decode($request->getContent(), true);
+            $actualite = new Actualite;
+            $actualite->setTitle($data['title']);
+            $actualite->setDescription($data['description']);
+            $actualite->setAuthor($userRepository->findOneBy(['id'=>$this->getUser()]));
+            $actualite->setDate(new DateTime());
+            $entityManager->persist($actualite);
+            $entityManager->flush();
+            return $this->json([
+                'success' => 'ok',
+            ]);
         }
         
         return $this->json([
-            'Error' => 'Error',
+            'error' => 'Error',
         ]);
     }
 }
