@@ -45,8 +45,8 @@ class ActualiteRepository extends ServiceEntityRepository
     public function find3last(): array
     {
         return $this->createQueryBuilder('a')
-            ->andWhere('actived = :val')
-            ->setParameter('val', true)
+            // ->andWhere('actived = :val')
+            // ->setParameter('val', true)
             ->orderBy('a.DateAt','DESC')
             ->setMaxResults(3)
             ->getQuery()
