@@ -23,7 +23,8 @@ class AtelierController extends AbstractController
     #[Route('/app/atelier/add', name: 'add_atelier')]
     public function addAtelier( Request $request,
                                 EntityManagerInterface $entityManager,
-                                AtelierRepository $atelierRepository): Response
+                                AtelierRepository $atelierRepository,
+                                UserRepository $userRepository): Response
     {
         $user= $this->getUser();
 
@@ -86,7 +87,12 @@ class AtelierController extends AbstractController
             $atelier->setHourStart($AtelierStartAt);
             $atelier->setHourStop($AtelierStopAt);
             
-            $atelier->setIntervenant($user);
+            if ($data['selectedInter']){
+                $inter = $userRepository->findOneBy(['id'=>$data['selectedInter']]);
+                $atelier->setIntervenant($inter);
+            }else{
+                $atelier->setIntervenant($user);
+            }
 
             $entityManager->persist($atelier);
             $entityManager->flush();
