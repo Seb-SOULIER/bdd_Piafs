@@ -27,7 +27,7 @@ class Comment
     private ?User $intervenant = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $atelierAt = null;
+    private ?\DateTime $atelierAt = null;
 
     public function getId(): ?int
     {
@@ -82,12 +82,12 @@ class Comment
         return $this;
     }
 
-    public function getAtelierAt(): ?\DateTimeImmutable
+    public function getAtelierAt(): ?\DateTime
     {
         return $this->atelierAt;
     }
 
-    public function setAtelierAt(?\DateTimeImmutable $atelierAt): self
+    public function setAtelierAt(?\DateTime $atelierAt): self
     {
         $this->atelierAt = $atelierAt;
 

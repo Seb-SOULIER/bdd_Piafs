@@ -330,7 +330,7 @@ class AtelierController extends AbstractController
                             $comment->setAddAt(new DateTimeImmutable());
                             $comment->setAdherant($children);
                             $comment->setComment($data['comment']);
-                            $comment->setAtelierAt(new DateTimeImmutable());
+                            $comment->setAtelierAt($atelier->getDate());
                             $entityManager->persist($comment);
                         }
                     }
