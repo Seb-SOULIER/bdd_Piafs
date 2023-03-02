@@ -82,4 +82,35 @@ class ActualiteController extends AbstractController
             'error' => 'Error',
         ]);
     }
+
+    #[Route('/app/actualite/supp', name: 'app_actualite_supp')]
+    public function supp(    ActualiteRepository $actualiteRepository,
+                            UserRepository $userRepository,
+                            Request $request,
+                            EntityManagerInterface $entityManager
+                            ): Response
+    {
+        
+        if (null === $this->getUser()) {
+            return $this->json([
+                'error' => 'Erreur Utilisateur - Merci de vous reconnecter',
+            ]);
+        }
+
+        if ($this->isGranted('ROLE_ADMIN')){
+            $data = json_decode($request->getContent(), true);
+            
+            $actualite = $actualiteRepository->findOneBy(['id'=>$data['id']]);
+            $actualite->setActived(false);
+            $entityManager->flush();
+            return $this->json([
+                'success' => 'ok',
+            ]);
+        }
+        
+        return $this->json([
+            'error' => 'Error',
+        ]);
+    }
+
 }
