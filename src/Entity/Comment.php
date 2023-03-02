@@ -26,6 +26,9 @@ class Comment
     #[ORM\ManyToOne(inversedBy: 'comments')]
     private ?User $intervenant = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $atelierAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Comment
     public function setIntervenant(?User $intervenant): self
     {
         $this->intervenant = $intervenant;
+
+        return $this;
+    }
+
+    public function getAtelierAt(): ?\DateTimeImmutable
+    {
+        return $this->atelierAt;
+    }
+
+    public function setAtelierAt(?\DateTimeImmutable $atelierAt): self
+    {
+        $this->atelierAt = $atelierAt;
 
         return $this;
     }
