@@ -28,7 +28,7 @@ class ActualiteController extends AbstractController
                     'title' => $actualite->getTitle(),
                     'description' => $actualite->getDescription(),
                     'date' => $actualite->getDateAt(),
-                    'author' => $actualite->getAuthor()->getLastname(). ' ' . $actualite->getAuthor()->getFirstname(),
+                    'author' => $actualite->getAuthor()->getFirstname(),
                 ]
             );
         }
