@@ -504,7 +504,8 @@ class AtelierController extends AbstractController
                 foreach($comments as $comment){
                     array_push($commentsSend,[
                         'addAt'=>$comment->getAddAt(),
-                        'comment'=>$comment->getComment()
+                        'comment'=>$comment->getComment(),
+                        'atelierAt'=>$comment->getAtelierAt()
                     ]);
                 }
 
