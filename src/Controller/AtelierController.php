@@ -525,7 +525,7 @@ class AtelierController extends AbstractController
                     'roles'=>$participant->getParent()->getRoles(),
                     'lastnameUser'=>$participant->getParent()->getLastname(),
                     'firstnameUser'=>$participant->getParent()->getFirstname(),
-                    'birhdateUser'=>$participant->getParent()->getBirthdate(),
+                    'birthdateUser'=>$participant->getParent()->getBirthdate(),
                     'address'=>$participant->getParent()->getAddress(),
                     'zipcode'=>$participant->getParent()->getZipcode(),
                     'city'=>$participant->getParent()->getCity(),
