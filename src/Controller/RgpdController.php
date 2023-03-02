@@ -24,8 +24,7 @@ ici la suite";
     public function terms(): Response
     {
         $terms =
-"coucou
-Condition d'utilisation ";
+"Condition d'utilisation ";
 
         return $this->json(
             $terms,
