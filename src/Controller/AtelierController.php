@@ -88,6 +88,7 @@ class AtelierController extends AbstractController
             $atelier->setHourStop($AtelierStopAt);
             
             if ($data['selectedInter']){
+                dd();
                 $inter = $userRepository->findOneBy(['id'=>$data['selectedInter']]);
                 $atelier->setIntervenant($inter);
             }else{
