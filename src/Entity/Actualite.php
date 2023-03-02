@@ -26,6 +26,9 @@ class Actualite
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $DateAt = null;
 
+    #[ORM\Column]
+    private ?bool $actived = true;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -75,6 +78,18 @@ class Actualite
     public function setDateAt(\DateTimeInterface $DateAt): self
     {
         $this->DateAt = $DateAt;
+
+        return $this;
+    }
+
+    public function isActived(): ?bool
+    {
+        return $this->actived;
+    }
+
+    public function setActived(bool $actived): self
+    {
+        $this->actived = $actived;
 
         return $this;
     }
