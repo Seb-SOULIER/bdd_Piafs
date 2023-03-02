@@ -561,11 +561,11 @@ class AtelierController extends AbstractController
 
     #[Route('/app/admin/atelier/listInter', name: 'atelier_admin_listInter')]
     public function atelierAdminListInter(UserRepository $userRepository){
-        $list1 = $userRepository->findByRoles(['["ROLE_INTER"]'],null);
-        $list2 = $userRepository->findByRoles(['["ROLE_ADMIN"]'],null);
+        $list1 = $userRepository->findByRoles(['["ROLE_ADMIN"]'],null);
+        $list2 = $userRepository->findByRoles(['["ROLE_INTER"]'],null);
 
         $list = array_merge($list1, $list2);
-        
+
         $listSend = [];
 
         foreach($list as $listOne){
