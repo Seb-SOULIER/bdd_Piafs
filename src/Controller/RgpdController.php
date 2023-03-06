@@ -12,7 +12,7 @@ class RgpdController extends AbstractController
     public function privacy(): Response
     {
         $privacy =
-"Politique de confidentialite
+"
 Le site web https://www.lespiafsactifs.fr est détenu par Les Piafs Actifs, qui est un contrôleur de données de vos données personnelles.
 
 Nous avons adopté cette politique de confidentialité, qui détermine la manière dont nous traitons les informations collectées par https://www.lespiafsactifs.fr, qui fournit également les raisons pour lesquelles nous devons collecter certaines données personnelles vous concernant. Par conséquent, vous devez lire cette politique de confidentialité avant d'utiliser le site web de https://www.lespiafsactifs.fr.
@@ -65,8 +65,7 @@ Si vous souhaitez nous contacter pour comprendre davantage la présente politiqu
     public function terms(): Response
     {
         $terms =
-
-" MENTIONS LEGALES
+"
 1 - Édition du site
 En vertu de l'article 6 de la loi n° 2004-575 du 21 juin 2004 pour la confiance dans l'économie numérique, il est précisé aux utilisateurs du site internet https://www.lespiafsactifs.fr/mobile-app l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi:
 
