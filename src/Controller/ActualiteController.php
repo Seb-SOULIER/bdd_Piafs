@@ -118,17 +118,10 @@ class ActualiteController extends AbstractController
     public function partnerList(   
                             PartnerRepository $partnerRepository,
                             ): Response
-    {
-        
-        $partnersFavovite = $partnerRepository->findBy(['isFavorite'=>true]);
+    {   
         $partners =$partnerRepository->findAll();
 
-        return $this->json(
-            [
-                $partnersFavovite,
-                $partners
-            ]
-        );
+        return $this->json($partners);
     }
         
 }
