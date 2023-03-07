@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Actualite;
 use App\Repository\ActualiteRepository;
+use App\Repository\PartnerRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -113,4 +114,21 @@ class ActualiteController extends AbstractController
         ]);
     }
 
+    #[Route('/app/partner/list', name: 'app_partner/list')]
+    public function partnerList(   
+                            PartnerRepository $partnerRepository,
+                            ): Response
+    {
+        
+        $partnersFavovite = $partnerRepository->findBy(['isFavorite'=>true]);
+        $partners =$partnerRepository->findAll();
+
+        return $this->json(
+            [
+                $partnersFavovite,
+                $partners
+            ]
+        );
+    }
+        
 }
