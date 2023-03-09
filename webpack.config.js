@@ -17,6 +17,10 @@ Encore
         from: './assets/logo_partner',
         to: 'logo_partner/[name].[ext]',
     })
+    .copyFiles({
+        from: './assets/app',
+        to: 'app/[name].[ext]',
+    })
 
     /*
      * ENTRY CONFIG
