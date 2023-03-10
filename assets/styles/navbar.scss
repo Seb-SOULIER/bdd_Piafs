@@ -1,0 +1,107 @@
+.navbar {
+    background-color: white;
+}
+//     background-color: transparent;
+//     border-color: $colorLogo2;
+//     cursor: pointer;
+//     display: flex;
+//     padding: 0;
+// }
+// .navbar{
+//     z-index:1000;
+//     @media screen and (min-width: 994px) {
+//         height:10vh;
+//         padding: 0;
+//     }
+// }
+.navbar-collapse{
+    justify-content: end;
+}
+
+.line {
+    fill: none;
+    stroke: $colorLogo1;
+    stroke-width: 6;
+    transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
+        stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+.line1 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+}
+.line2 {
+    stroke-dasharray: 60 60;
+    stroke-width: 6;
+}
+.line3 {
+    stroke-dasharray: 60 207;
+    stroke-width: 6;
+}
+.opened .line1 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 6;
+}
+.opened .line2 {
+    stroke-dasharray: 1 60;
+    stroke-dashoffset: -30;
+    stroke-width: 6;
+}
+.opened .line3 {
+    stroke-dasharray: 90 207;
+    stroke-dashoffset: -134;
+    stroke-width: 6;
+}
+
+.menu-navbar{
+    display: flex;
+    h2{
+        color:white;
+    }
+    h2:hover{
+        color:$colorLogo2;
+    }
+}
+
+// @media screen and (min-width: 994px) {
+//     .menu-navbar{
+//         justify-content: end;
+//         margin-left:15rem;
+//     }
+// }
+
+@media screen and (max-width: 994px) {
+    .menu-navbar{
+        li{
+            width: 100%;
+            text-align: center;
+        }
+    }
+    .button-menu{
+        h2{
+            color: $colorLogo1;
+        }
+    }
+}
+
+.navbar-light .navbar-toggler{
+    border-color: $colorLogo2;
+}
+
+@media screen and (min-width: 994px) {
+    .button-menu{
+        border-radius: 10px;
+        background-color: $colorLogo2;
+        margin-inline: 1rem;
+    }   
+    
+}
+
+.button-menu:hover{
+    border-radius: 10px;
+    background-color: $colorLogo1;
+    h2{
+        color:$colorLogo3;
+    }
+}
+

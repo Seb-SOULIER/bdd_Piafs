@@ -21,7 +21,10 @@ Encore
         from: './assets/app',
         to: 'app/[name].[ext]',
     })
-
+    .copyFiles({
+        from: './assets/images',
+        to: 'images/[name].[ext]',
+    })
     /*
      * ENTRY CONFIG
      *
@@ -65,7 +68,7 @@ Encore
     })
 
     // enables Sass/SCSS support
-    //.enableSassLoader()
+    .enableSassLoader()
 
     // uncomment if you use TypeScript
     //.enableTypeScriptLoader()
