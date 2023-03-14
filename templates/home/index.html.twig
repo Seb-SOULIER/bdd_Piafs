@@ -5,20 +5,9 @@
 {% block body %}
 
 <div class="example-wrapper">
-
-{# {% set browserValues = [ { agent: 'android'}, { agent: 'iemobile'}] %}
-{% set userAgent = app.request.headers.getUserAgent()|lower %}
-{% for item in browserValues %}
-   {% if item.agent in userAgent %}
-     You're on mobile
-   {% else %}
-     You're not on mobile
-   {% endif %}
- {% endfor %} #}
-
-{{ app.request.headers}}
-
-    Télécharger l'application des Piafs Actifs:
-    <a href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">Télécharger l'App</a>
+    {% if app.request.headers.get('User-Agent') matches '/Android/i' and app.request.headers.get('User-Agent') matches '/Mobile/i' %}
+        Télécharger l'application des Piafs Actifs:
+        <a href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">Télécharger l'App</a>
+    {% endif %}
 </div>
 {% endblock %}
