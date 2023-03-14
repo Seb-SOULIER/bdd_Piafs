@@ -5,7 +5,7 @@
 {% block body %}
 
 <div class="example-wrapper">
-    {% if app.request.headers.get('User-Agent') matches '/Chrome\/([\d\.]+)/i' and app.request.headers.get('User-Agent') matches '/Android/i' and app.request.headers.get('User-Agent') matches '/Mobile/i' %}
+    {% if app.request.headers.get('User-Agent') matches '/Android/i' and app.request.headers.get('User-Agent') matches '/Chrome\/([\d\.]+)/i' %}
         Télécharger l'application des Piafs Actifs:
         <a href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">Télécharger l'App</a>
     {% endif %}
