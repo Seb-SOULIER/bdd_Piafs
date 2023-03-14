@@ -1,0 +1,36 @@
+.bodyConnect{
+    .form-control{
+        border: 2px solid $colorLogo5;
+        text-align: center;
+        margin-top:2rem;
+    }
+}
+
+.btn-connect{
+    width: 100%;
+    background-color: $colorLogo2;
+    color:white;
+    font-weight: bold;
+    border-radius: 50px;
+    box-shadow: 3px 3px 6px black;
+    margin-top:2rem;
+}
+
+.form-align{
+    margin: auto;
+    display:flex;
+    flex-direction: column;
+    padding-top: 5rem;
+    max-width: 700px;
+}
+
+.text-inscription{
+    margin-top: 10vh;
+    color: black;
+    text-decoration: none;
+    text-align: center;
+}
+
+.text-inscription:hover{
+    color: $colorLogo5;
+}

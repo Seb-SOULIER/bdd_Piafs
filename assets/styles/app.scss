@@ -1,7 +1,13 @@
 @import "~bootstrap/scss/bootstrap";
 @import "color";
 @import "navbar";
+@import "connect";
 
 body {
     background-color: lightgray;
+}
+
+.bodyConnect {
+    background-color: $colorLogo1 ;
+    height: 100vh;
 }
