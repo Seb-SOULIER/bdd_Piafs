@@ -1,0 +1,30 @@
+@media screen and (min-width: 994px) {
+    .mobile {
+        display:none;
+    }
+}
+
+@media screen and (max-width: 994px) {
+    .no-mobile {
+        display:none;
+    }
+}
+
+.card-android{
+    display: flex;
+    min-height: fit-content;
+    height: 15vh;
+    background-color: white;
+    width: fit-content;
+    text-decoration: none;
+    margin: 2rem;
+    margin-inline: auto;
+    padding: 1rem;
+    align-items: center;
+    border: solid 2px $colorLogo1;
+    border-radius: 1rem;
+    box-shadow: 5px 5px 15px $colorLogo1;
+    h5, p {
+        color:black;
+    }
+}
