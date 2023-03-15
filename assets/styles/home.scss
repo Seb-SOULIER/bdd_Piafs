@@ -2,11 +2,34 @@
     .mobile {
         display:none;
     }
+    .page-acceuil {
+        display: flex;
+        flex-direction: row;
+        .img-page-acceuil{
+            width:50%;
+            border: solid 2px $colorLogo1;
+            margin-inline:5rem;
+        }
+        .text-acceuil{
+            width: 50%;
+            margin-right:5rem;
+            margin-left: 0;
+        }
+    }
+    .page-partner{
+        width: calc(100% - 10rem);
+        margin-top: 1rem;
+        margin-inline:5rem;
+    }
 }
 
 @media screen and (max-width: 994px) {
     .no-mobile {
         display:none;
+    }
+    .img-page-acceuil{
+        object-fit: cover;
+        height:10rem;
     }
 }
 
@@ -28,3 +51,75 @@
         color:black;
     }
 }
+.img-page-acceuil{
+    width:100%;
+}
+
+.text-acceuil{
+    border: solid 2px $colorLogo1;
+    background-color: white;
+    h1{
+        color:$colorLogo1;
+        font-weight: bold;
+    }
+    .sub-title-actualite{
+        font-weight: bold;
+        text-align: center;
+    }
+
+}
+
+.card-actualite{
+    border: solid 2px $colorLogo1;
+    border-radius: 2rem;
+    margin:1rem;
+    padding: 0.8rem;
+    h4{
+        color:$colorLogo1;
+        font-weight: bold;
+    }
+    p{
+        text-align: center;
+    }
+    .author-actualite{
+        text-align: end;
+        margin-bottom: 0;
+        color:$colorLogo2;
+    }
+}
+
+.page-partner{
+    background-color: white;
+    padding: 1rem;
+    height: 10vh;
+    h3{
+        color:$colorLogo1;
+        font-weight: bold;    
+    }
+
+    .slider-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .img-partner {
+        display: flex;
+        justify-content: center;
+      }
+      
+      .img-partner .img-thumbnail {
+        display: flex;
+        max-width: 150px;
+        max-height: 100px;
+        margin: 2px;
+      }      
+}
+.body-home{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+

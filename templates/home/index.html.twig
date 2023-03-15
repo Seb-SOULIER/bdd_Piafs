@@ -4,6 +4,7 @@
 
 {% block body %}
 
+<div class="body-home">
 <div class="mobile">
     <a class ="card-android" href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">
         <img style="height:100%; width:auto"  class="card-img-top" src="{{ asset('build/images/android.png') }}" alt="android app">
@@ -24,6 +25,32 @@
             <p class="card-text-android text-end mt-3"><small class="text-muted">Cod4y</small></p>
         </div>
     </div>
+</div>
+
+<div class="page-acceuil">
+    <img class="img-page-acceuil" src="{{ asset('build/images/child.jpeg') }}" alt="piafs Actifs">
+    <div class="text-acceuil">
+        <h1 class="text-center">Bienvenue {% if app.user %} {{ app.user.firstname }} {% endif %} </h1>
+        <p class="sub-title-actualite">Nos dernières actualités</p>
+        {% for actualite in listActualite %}
+            <div class="card-actualite">
+                <h4 class="text-center">{{actualite.title}}</h4>
+                <p>{{actualite.description}}</p>
+                <p class="author-actualite">{% if actualite.author == "Pas d'auteur" %} Pas d'auteur {% else %} {{actualite.author.firstname}} {% endif %}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+<div class="page-partner">
+    <h3 class="text-center">Découvrir nos pertenaires</h3>
+    <div class="row section-content slider-section">
+        {% for partner in partners %}
+            <div class="col img-partner">
+                <img class="img-thumbnail" src="{{partner.lienUrl}}" title="{{ partner.name }}" alt="{{ partner.name }}">
+            </div>
+        {% endfor %}
+    </div>
+</div>
 </div>
 
 {% endblock %}
