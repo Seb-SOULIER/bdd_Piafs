@@ -50,7 +50,7 @@ class HomeController extends AbstractController
         $countUploadRepository->save($countUpload, true);
 
         return $this->json(
-            $countUpload
+            ['success'=>'ok']
         );
     }
 }
