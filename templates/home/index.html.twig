@@ -7,7 +7,7 @@
 
 	<div class="body-home">
 		<div class="mobile">
-			<a id='countUpload' class="card-android" href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">
+			<a class="card-android" href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk" onclick="runScript()">
 				<img style="height:100%; width:auto" class="card-img-top" src="{{ asset('build/images/android.png') }}" alt="android app">
 				<div class="card-body-android">
 					<h5 class="card-title-android text-center">Télécharger l'App</h5>
@@ -19,7 +19,7 @@
 			</a>
 		</div>
 		{% if app.user %}
-			<p id='text-upload' class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>
+			<p class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>
 		{% endif %}
 
 		<div class="no-mobile">
@@ -72,12 +72,9 @@
 	</div>
 
     <Script>
-        const button = document.getElementById('countUpload');
-		const nbrUpload = document.getElementById('text-upload');
-
-        button.addEventListener('click', event => {
-            fetch(`/countUpload`)
-        });
+		function runScript() {
+			fetch('/countUpload')
+		}
     </Script>
 {% endblock %}
 
