@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Children;
 use App\Entity\User;
+use App\Form\RegistrationFormType;
 use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use DateTime;
@@ -275,6 +276,33 @@ class RegistrationController extends AbstractController
 
         return $this->json([
             'success'  => "ok",
+        ]);
+    }
+
+    #[Route('/register', name:'register')]
+    public function registerSite(Request $request,UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
+    {
+        $user=new User();
+        $form = $this->createForm(RegistrationFormType::class,$user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword(
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $user->setAvatar(rand(1,15).".png");
+            $userRepository->save($user, true);
+
+            $this->addFlash('success','Inscription reussi');
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+
+        }
+
+        return $this->render('registration/register.html.twig', [
+            'registrationForm' => $form->createView(),
         ]);
     }
 }
