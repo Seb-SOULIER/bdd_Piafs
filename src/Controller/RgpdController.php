@@ -11,7 +11,7 @@ class RgpdController extends AbstractController
     #[Route('/app/rgpd/privacy', name: 'app_rgpd_privacy')]
     public function privacy(): Response
     {
-        $privacy =
+        $privacy = 
 "
 Le site web https://www.lespiafsactifs.fr est détenu par Les Piafs Actifs, qui est un contrôleur de données de vos données personnelles.
 
@@ -126,5 +126,17 @@ Tout litige en relation avec l’utilisation du site https://www.lespiafsactifs.
         return $this->json(
             $terms,
         );
+    }
+
+    #[Route('/rgpd/privacy', name: 'rgpd_privacy')]
+    public function rgpdPrivacy(): Response
+    {
+        return $this->render('rgpd/privacy.html.twig');
+    }
+
+    #[Route('/rgpd/terms', name: 'rgpd_terms')]
+    public function rgpdTerms(): Response
+    {
+        return $this->render('rgpd/terms.html.twig');
     }
 }

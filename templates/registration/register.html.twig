@@ -10,9 +10,10 @@
 
                 {{ form_widget(registrationForm.email) }}
                 {{ form_widget(registrationForm.plainPassword) }}
-                <p class="mt-2">{{ form_widget(registrationForm.agreeTerms) }} J'accepte les mentions légales et la polique de confidentialite</p>
-
-                <button type="submit" class="btn">Register</button>
+                <p class="mt-2 text-center">{{ form_widget(registrationForm.agreeTerms) }}  J'accepte les <a href="{{ path('rgpd_privacy')}}" style="text-decoration:none">mentions légales</a> et la <a href="{{ path('rgpd_terms')}}" style="text-decoration:none">polique de confidentialité</a></p>
+                <button class="btn btn-connect" type="submit">
+                    CREER
+                </button>
             {{ form_end(registrationForm) }}
             <a  href="{{ path('app_login') }}" class="text-inscription mt-3">Déjà un compte? Se connecter</a>
         </div>

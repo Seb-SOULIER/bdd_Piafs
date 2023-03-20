@@ -17,48 +17,48 @@
 				{% if app.user %}
 					<li class="nav-item">
 						<a href="{{ path('app_home') }}" class="nav-link button-menu">
-							<h2>Bienvenue
+							<h2 class="mb-0">Bienvenue
 								{{ app.user.firstname }}</h2>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{ path('app_home') }}" class="nav-link button-menu">
-							<h2>Ateliers</h2>
+							<h2 class="mb-0">Ateliers</h2>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="{{ path('app_home') }}" class="nav-link button-menu">
-							<h2>Mon profil</h2>
+						<a href="{{ path('app_profil') }}" class="nav-link button-menu">
+							<h2 class="mb-0">Mon profil</h2>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a href="{{ path('app_logout') }}" class="nav-link button-menu">
-							<h2>Inscriptions</h2>
+							<h2 class="mb-0">Inscriptions</h2>
 						</a>
 					</li>
 					{% if is_granted('ROLE_INTER') %}
 					<li class="nav-item">
 							<a href="{{ path('app_logout') }}" class="nav-link button-menu">
-								<h2>Mes ateliers</h2>
+								<h2 class="mb-0">Mes ateliers</h2>
 							</a>
 						</li>
 					{% endif %}
 					{% if is_granted('ROLE_ADMIN') %}
 					<li class="nav-item">
 							<a href="{{ path('app_logout') }}" class="nav-link button-menu">
-								<h2>Nos ateliers</h2>
+								<h2 class="mb-0">Nos ateliers</h2>
 							</a>
 						</li>
 					{% endif %}
 					<li class="nav-item">
 						<a href="{{ path('app_logout') }}" class="nav-link button-menu">
-							<h2>Se déconnecter</h2>
+							<h2 class="mb-0">Se déconnecter</h2>
 						</a>
 					</li>
 				{% else %}
 					<li class="nav-item">
 						<a href="{{ path('app_login') }}" class="nav-link button-menu">
-							<h2>Se connecter</h2>
+							<h2 class="mb-0">Se connecter</h2>
 						</a>
 					</li>
 				{% endif %}

@@ -18,6 +18,10 @@ Encore
         to: 'logo_partner/[name].[ext]',
     })
     .copyFiles({
+        from: './assets/avatar_piafs',
+        to: 'avatar_piafs/[name].[ext]',
+    })
+    .copyFiles({
         from: './assets/app',
         to: 'app/[name].[ext]',
     })
