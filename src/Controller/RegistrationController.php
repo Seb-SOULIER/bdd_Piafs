@@ -7,15 +7,16 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
+use App\Security\LoginAuthenticator;
 use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class RegistrationController extends AbstractController
@@ -95,7 +96,6 @@ class RegistrationController extends AbstractController
     public function registerAdminEdit(
                                         Request $request,
                                         EntityManagerInterface $entityManager,
-                                        ValidatorInterface $validator,
                                         UserRepository $userRepository
                                     ): Response
     {
@@ -280,8 +280,12 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name:'register')]
-    public function registerSite(Request $request,UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository)
-    {
+    public function registerSite(Request $request,
+                                UserPasswordHasherInterface $userPasswordHasher,
+                                UserRepository $userRepository,
+                                UserAuthenticatorInterface $authenticatorManager,
+                                LoginAuthenticator $authenticator)
+                                {
         $user=new User();
         $form = $this->createForm(RegistrationFormType::class,$user);
         $form->handleRequest($request);
@@ -296,8 +300,13 @@ class RegistrationController extends AbstractController
             $user->setAvatar(rand(1,15).".png");
             $userRepository->save($user, true);
 
+            $request->getSession()->set(Security::LAST_USERNAME, $user->getEmail());
+
             $this->addFlash('success','Inscription reussi');
-            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+            
+            $authenticatorManager->authenticateUser($user, $authenticator, $request);
+
+            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
 
         }
 
