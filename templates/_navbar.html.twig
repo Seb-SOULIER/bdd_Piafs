@@ -21,22 +21,22 @@
 								{{ app.user.firstname }}</h2>
 						</a>
 					</li>
-					<li class="nav-item">
+					{# <li class="nav-item">
 						<a href="{{ path('app_home') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Ateliers</h2>
 						</a>
-					</li>
+					</li> #}
 					<li class="nav-item">
 						<a href="{{ path('app_profil') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Mon profil</h2>
 						</a>
 					</li>
-					<li class="nav-item">
+					{# <li class="nav-item">
 						<a href="{{ path('app_logout') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Inscriptions</h2>
 						</a>
-					</li>
-					{% if is_granted('ROLE_INTER') %}
+					</li> #}
+					{# {% if is_granted('ROLE_INTER') %}
 					<li class="nav-item">
 							<a href="{{ path('app_logout') }}" class="nav-link button-menu">
 								<h2 class="mb-0">Mes ateliers</h2>
@@ -49,7 +49,7 @@
 								<h2 class="mb-0">Nos ateliers</h2>
 							</a>
 						</li>
-					{% endif %}
+					{% endif %} #}
 					<li class="nav-item">
 						<a href="{{ path('app_logout') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Se déconnecter</h2>
