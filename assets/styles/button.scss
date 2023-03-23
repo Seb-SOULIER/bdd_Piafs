@@ -1,0 +1,12 @@
+.button1{
+    text-decoration: none;
+    color:white;
+    background-color: $colorLogo2;
+    align-items: center;
+    width:45%;
+    margin-inline: auto;
+}
+
+.button1:hover{
+    background-color: $colorLogo1;
+}

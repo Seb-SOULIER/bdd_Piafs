@@ -4,13 +4,15 @@
 @import "connect";
 @import 'home';
 @import 'profil';
+@import '_footer';
+@import 'button.scss';
+
 
 body {
+    padding: 0;
+    margin: 0;
+    min-height: 100svh;
+    padding-bottom: 17vh;
     background-color: white;
+    position: relative;
 }
-
-.bodyConnect {
-    background-color: $colorLogo1 ;
-    height:88vh
-}
-

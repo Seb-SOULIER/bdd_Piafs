@@ -3,8 +3,8 @@
 {% block title %}Profil{% endblock %}
 
 {% block body %}
-<div class="body-home">
-		<div class="page-acceuil mt-3">
+    <div class="body-home">
+		<div class="page-acceuil m-3">
 			<div class="text-acceuil m-auto">
 				<h1 class="text-center">Mon profil</h1>
                 <div class="d-flex">
@@ -25,65 +25,41 @@
                     </div>
                 </div>
                 <div class="card-actualite">
-                    <p>{{user.roles|json_encode}}</p>
+                    <div class="d-flex">
+                        <p class='title-profil'>Nom :</p>
+                        <p class='text-profil'>{{ user.lastname }}</p>
+                    </div>
+                     <div class="d-flex">
+                        <p class='title-profil'>Prénom :</p>
+                        <p class='text-profil'>{{ user.firstname }}</p>
+                    </div>
+                     <div class="d-flex">
+                        <p class='title-profil'>Date de naissance :</p>
+                        <p class='text-profil'>{{ user.birthdate ? user.birthdate|date('d/m/Y') : '' }}</p>
+                    </div>
+                     <div class="d-flex">
+                        <p class='title-profil'>Tél :</p>
+                        <p class='text-profil'>{{ user.phone }}</p>
+                    </div>
+                     <div class="d-flex">
+                        <p class='title-profil'>Adresse :</p>
+                        <p class='text-profil'>{{ user.address }}<br>{{ user.zipcode }} {{ user.city }}</p>
+                    </div>
+                    <a class='btn button1' href="{{ path('app_profil_edit', {'id': user.id}) }}">Modifier le profil</a>
+                </div>
+                <div class="card-actualite">
+                    <h3 class="card-title">Mes adhérants</h3>
+                    {% for adherant in user.childrens %}
+                        <div class="d-flex">
+                            <p class='title-profil'>{{adherant.name}} {{adherant.firstname}}</p>
+                            <p class='text-profil'>{{ date().diff(date(adherant.birthdate)).format('%y') }} ans, ({{adherant.birthdate ? adherant.birthdate|date('d/m/Y') : ''}})<br>
+                                <span class= {{adherant.isActive ? 'text-compte' : 'text-compte-2'}} >{{adherant.activeAt ? 'compte actif jusqu\'au '~ adherant.activeAt|date('d/m/Y') : 'compte inactif'}}</span>
+                            </p>
+                        </div>
+                    {% endfor %}
+                    <a class='btn button1' href="{{ path('app_children_new')}}">Ajouter un adhérant</a>
                 </div>
 			</div>
 		</div>
 	</div>
-
-    <h1>User index</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>Token</th>
-                <th>ValidToken</th>
-                <th>Lastname</th>
-                <th>Firstname</th>
-                <th>Birthdate</th>
-                <th>Avatar</th>
-                <th>Address</th>
-                <th>Zipcode</th>
-                <th>City</th>
-                <th>Phone</th>
-                <th>SubcribeAt</th>
-                <th>RestoreCode</th>
-                <th>AllActif</th>
-                <th>AllInactif</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
-                <td>{{ user.password }}</td>
-                <td>{{ user.token }}</td>
-                <td>{{ user.validToken ? user.validToken|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.lastname }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.birthdate ? user.birthdate|date('Y-m-d') : '' }}</td>
-                <td>{{ user.avatar }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ user.zipcode }}</td>
-                <td>{{ user.city }}</td>
-                <td>{{ user.phone }}</td>
-                <td>{{ user.subcribeAt ? user.subcribeAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ user.restoreCode }}</td>
-                <td>{{ user.allActif ? 'Yes' : 'No' }}</td>
-                <td>{{ user.allInactif ? 'Yes' : 'No' }}</td>
-                <td>
-                    {# <a href="{{ path('app_profil_show', {'id': user.id}) }}">show</a>
-                    <a href="{{ path('app_profil_edit', {'id': user.id}) }}">edit</a> #}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    {# <a href="{{ path('app_profil_new') }}">Create new</a> #}
 {% endblock %}

@@ -1,13 +1,70 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Profil{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
 
-    {{ include('profil/_form.html.twig', {'button_label': 'Update'}) }}
+ <div class="body-home">
+		<div class="page-acceuil m-3">
+			<div class="text-acceuil m-auto">
+				<h1 class="text-center">Mon profil</h1>
+                <div class="d-flex">
+                    <img class="img-profil" src="{{asset('/build/avatar_piafs/')}}{{user.avatar}}" title="avatar Piafs Actifs" alt="avatar Piafs Actifs" height="150px">
+                    <div class="w-50 d-flex m-auto flex-column" >
+                        <h4 style="font-weight: bold">
+						    {{ app.user.email }}
+                        </h4>
+                        <p>
+                            {% if user.roles|json_encode == '["ROLE_ADMIN"]' %}
+                                Administrateur
+                            {% elseif user.roles|json_encode == '["ROLE_INTER"]' %}
+                                Intervenant
+                            {% else %}
+                                Utilisateur
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                <div class="card-actualite">
+                {{ form_start(form) }}
+                    {# {{ form_widget(form) }} #}
+                
+                    <div class="d-flex">
+                        <p class='title-profil'>Nom :</p>
+                        <p class='text-profil'>{{ form_widget(form.lastname) }}</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class='title-profil'>Prénom :</p>
+                        <p class='text-profil'>{{ form_widget(form.firstname) }}</p>
+                    </div>
+                     <div class="d-flex" style="align-items:baseline">
+                        <p class='title-profil'>Date de naissance :</p>
+                        <p class='text-profil'>{{ form_widget(form.birthdate) }}</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class='title-profil'>Tél :</p>
+                        <p class='text-profil'>{{ form_widget(form.phone) }}</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class='title-profil'>Adresse :</p>
+                        <p class='text-profil'>{{ form_widget(form.address) }}</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class='title-profil'>Code postal :</p>
+                        <p class='text-profil'>{{ form_widget(form.zipcode) }}</p>
+                    </div>
+                    <div class="d-flex">
+                        <p class='title-profil'>Ville :</p>
+                        <p class='text-profil'>{{ form_widget(form.city) }}</p>
+                    </div>
+                    <div class="d-flex flex-row-reverse">
+                        <button class='btn button1'>ENREGISTRER</button>
+                     {{ form_end(form) }}   
+                        <a class="btn button1" href="{{ path('app_profil') }}">RETOUR</a>
+                    </div>
+                </div>
+			</div>
+		</div>
+	</div>
 
-    {# <a href="{{ path('app_profil_index') }}">back to list</a> #}
-
-    {# {{ include('profil/_delete_form.html.twig') }} #}
 {% endblock %}

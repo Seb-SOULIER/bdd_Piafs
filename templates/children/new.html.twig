@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Adherant{% endblock %}
+
+{% block body %}
+
+<div class="body-home">
+    <div class="page-acceuil m-3">
+        <div class="text-acceuil m-auto">
+            <div class="card-actualite">
+                <h3 class="card-title">Mes adhérants</h3>
+                {% for adherant in user.childrens %}
+                    <div class="d-flex">
+                        <p class='title-profil'>{{adherant.name}} {{adherant.firstname}}</p>
+                        <p class='text-profil'>{{ date().diff(date(adherant.birthdate)).format('%y') }} ans, ({{adherant.birthdate ? adherant.birthdate|date('d/m/Y') : ''}})<br>
+                            <span class= {{adherant.isActive ? 'text-compte' : 'text-compte-2'}} >{{adherant.activeAt ? 'compte actif jusqu\'au '~ adherant.activeAt|date('d/m/Y') : 'compte inactif'}}</span>
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            <div class="card-actualite">
+            <h1 class="text-center">Nouveau adhérant</h1>
+            {{ form_start(form) }}
+                <div class="d-flex">
+                    <p class='title-profil'>Nom :</p>
+                    <p class='text-profil'>{{ form_widget(form.name) }}</p>
+                </div>
+                <div class="d-flex">
+                    <p class='title-profil'>Prénom :</p>
+                    <p class='text-profil'>{{ form_widget(form.firstname) }}</p>
+                </div>
+                    <div class="d-flex" style="align-items:baseline">
+                    <p class='title-profil'>Date de naissance :</p>
+                    <p class='text-profil'>{{ form_widget(form.birthdate) }}</p>
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <button class='btn button1'>AJOUTER</button>
+                    {{ form_end(form) }}   
+                    <a class="btn button1" href="{{ path('app_profil') }}">RETOUR</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+   
+{% endblock %}
