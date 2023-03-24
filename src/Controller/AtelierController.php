@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Atelier;
 use App\Entity\Comment;
+use App\Form\InscriptionType;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
 use App\Repository\CommentRepository;
@@ -13,10 +14,12 @@ use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\Date;
 
 class AtelierController extends AbstractController
 {
@@ -585,5 +588,110 @@ class AtelierController extends AbstractController
         }
 
         return $this->json($listSend);
+    }
+
+    #[Route('/atelier/list', name: 'site_list_atelier')]
+    public function siteListAtelier(AtelierRepository $atelierRepository): Response
+    {   
+        $now = new DateTime('now');
+        $now->sub(new DateInterval('P1D'));
+
+        return $this->render('atelier/index.html.twig', [
+            'listAteliers' => $atelierRepository->findAllAfter($now)
+        ]);
+    }
+
+    #[Route('/atelier/{atelier}', name: 'site_atelier')]
+    public function siteAtelier(    Atelier $atelier,
+                                    Request $request,
+                                    ChildrenRepository $childrenRepository,
+                                    EntityManagerInterface $entityManager,
+                                    UserRepository $userRepository): Response
+    {   
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+        
+        $childrens = [];
+
+        foreach ($user->getChildrens() as $children){
+            if($children->isIsActive() === true){
+                array_push($childrens,[
+                    $children->getFirstname(). ' '. $children->getName() => $children->getId()
+                ]);
+            }
+        }
+        
+        $form = $this->createFormBuilder() 
+            ->add('childrens', ChoiceType::class, [
+                'choices'  => $childrens,
+                'expanded' => true,
+                'multiple' => true,
+            ])
+            ->add('comment',TextareaType::class,[
+                'required'=>false,
+                'attr'=>[
+                    'rows'=>4,
+                    'class'=>'input-comment'
+                ]
+            ])
+            ->getForm();
+        
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $data = $form->getData();
+
+            $alreadyRegistered = false;
+            foreach($data['childrens'] as $childrenId) {
+
+                $alreadyRegistered = false;
+
+                $children = $childrenRepository->findOneBy(['id'=>$childrenId]);
+                
+                    foreach($atelier->getParticipants() as $participant) {
+                        if($participant === $children){
+                            $alreadyRegistered = true;
+                        }
+                    }
+
+                if($alreadyRegistered){
+                    $this->addFlash('danger', $children->getName() . ' ' . $children->getFirstname() . ' est déjà inscrit(e).');
+                }else{
+                    if($atelier->getPlaceReserved()+1 > $atelier->getPlace()){
+                        $this->addFlash('danger', 'Il n\'y a plus de place disponible');
+                    }else{
+                        $atelier->setPlaceReserved($atelier->getPlaceReserved()+1);
+                        $atelier->addParticipant($children);
+                        $this->addFlash('success', $children->getName() . ' ' . $children->getFirstname() . ' est inscrit(e).');
+                    }   
+                }
+            }
+            if($data['comment'] !== null){
+                $comment = new Comment;
+                $comment->setIntervenant($atelier->getIntervenant());
+                $comment->setAddAt(new DateTimeImmutable());
+                $comment->setAdherant($children);
+                $comment->setComment($data['comment']);
+                $comment->setAtelierAt($atelier->getDate());
+                $entityManager->persist($comment);
+                $this->addFlash('success','Message transmis à l\'intervenant');
+            }
+
+            $entityManager->flush();
+            
+            return $this->redirectToRoute('site_list_atelier', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->render('atelier/inscription.html.twig', [
+            'atelier' => $atelier,
+            'form'=>$form->createView()
+        ]);
     }
 }

@@ -12,12 +12,25 @@
 
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
+            {{ encore_entry_script_tags('alertMessage') }}
         {% endblock %}
     </head>
     <body>
         {% block navbar %}
             {% include "_navbar.html.twig" %}
         {% endblock %}
+        <div class="container">
+            {% for category, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="mt-2">
+                        <div id="liveAlertPlaceholder"></div>
+                    </div>
+                    <div class="liveAlertBtn alert alert-{{ category }}" style="z-index: 99; display:none" >
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
         {% block body %}{% endblock %}
         {% block footer %}
             {% include "_footer.html.twig" %}

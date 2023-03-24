@@ -21,11 +21,11 @@
 								{{ app.user.firstname }}</h2>
 						</a>
 					</li>
-					{# <li class="nav-item">
-						<a href="{{ path('app_home') }}" class="nav-link button-menu">
-							<h2 class="mb-0">Ateliers</h2>
+					<li class="nav-item">
+						<a href="{{ path('site_list_atelier') }}" class="nav-link button-menu">
+							<h2 class="mb-0">Nos ateliers</h2>
 						</a>
-					</li> #}
+					</li>
 					<li class="nav-item">
 						<a href="{{ path('app_profil') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Mon profil</h2>
@@ -57,6 +57,11 @@
 					</li>
 				{% else %}
 					<li class="nav-item">
+						<a href="{{ path('site_list_atelier') }}" class="nav-link button-menu">
+							<h2 class="mb-0">Nos ateliers</h2>
+						</a>
+					</li>
+					<li class="nav-item">
 						<a href="{{ path('app_login') }}" class="nav-link button-menu">
 							<h2 class="mb-0">Se connecter</h2>
 						</a>
@@ -66,4 +71,3 @@
 		</div>
 	</div>
 </nav>
-
