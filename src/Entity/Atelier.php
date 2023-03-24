@@ -32,7 +32,7 @@ class Atelier
     private ?int $place = null;
 
     #[ORM\ManyToOne(inversedBy: 'ateliers')]
-    private ?user $intervenant = null;
+    private ?User $intervenant = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;

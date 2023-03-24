@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos ateliers{% endblock %}
+
+{% block body %}
+
+{% set day = {
+    0 : 'Dimanche',
+    1 : 'Lundi',
+    2 : 'Mardi',
+    3 : 'Mercredi',
+    4 : 'Jeudi',
+    5 : 'Vendredi',
+    6 : 'Samedi'
+}
+%}
+
+{% set month = {
+    '' : 'Janvier',
+    '' : 'Février',
+    '' : 'Mars',
+    'Apr' : 'Avril',
+    '' : 'Mai',
+    '' : 'Juin',
+    '' : 'Juillet',
+    '' : 'Aout',
+    '' : 'Septembre',
+    '' : 'Octobre',
+    '' : 'Novembre',
+    '' : 'Decembre'
+}
+%}
+
+<div class="body-home">
+    <div class="page-acceuil m-3">
+        <div class="text-acceuil m-auto">
+            <div class="card-actualite">
+                <h1 class="text-center">{{ atelier.name }}</h1>
+            </div>
+            <div class="atelier-description">
+                <p>{{ atelier.description }}</p>
+            </div>
+            <div class="atelier-author">
+                <p> Animé par {{ atelier.intervenant.lastname }} {{ atelier.intervenant.firstname }}</p>
+            </div>
+
+            <div class="atelier-date">
+                   <p>Date : le {{ atelier.date|date('d/m/Y') }}<p/>
+                   <p>Horaire : {{ atelier.hourStart|date('H:i') }} à {{ atelier.hourStop|date('H:i') }}</p>
+            </div>
+            <div class="card-actualite">
+                {{ form_start(form) }}
+                {% if form.childrens|length < 1 %}
+                    <p>Vous n'avez pas d'adhérent validé par l'association</p>
+                    <p>Merci de contacter les Piafs Actifs</p>
+                {% else %}
+                    {{ form_widget(form.childrens) }}
+                {% endif %}
+                <div class="inscription-comment">
+                    {{ form_label(form.comment,"Remarque/Message poour l'intervenant :(facultatif)") }}
+                    {{ form_widget(form.comment) }}   
+                </div>
+                <div class="d-flex flex-row-reverse">
+                    <button class='btn button1'>RESERVER</button>
+                {{ form_end(form) }}   
+                    <a class="btn button1" href="{{ path('site_list_atelier') }}">RETOUR</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
