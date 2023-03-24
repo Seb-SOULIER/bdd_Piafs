@@ -40,6 +40,7 @@
         display: flex;
         flex-direction: column;
         width: 65%;
+        padding: 1rem;
         .title-atelier{
             margin-inline: auto;
             font-weight: bold;
@@ -52,7 +53,7 @@
         .author-atelier{
             margin-right: 1rem;
             margin-left: auto;
-            color: rgba(128, 128, 128, 0.2);
+            color: grey;
             font-style: italic;
         }
     }
