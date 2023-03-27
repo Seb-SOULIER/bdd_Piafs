@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes inscriptions{% endblock %}
+
+{% block body %}
+
+{% set day = {
+    0 : 'Dimanche',
+    1 : 'Lundi',
+    2 : 'Mardi',
+    3 : 'Mercredi',
+    4 : 'Jeudi',
+    5 : 'Vendredi',
+    6 : 'Samedi'
+}
+%}
+
+{% set month = {
+    'Jan' : 'Janvier',
+    'Feb' : 'Février',
+    'Mar' : 'Mars',
+    'Apr' : 'Avril',
+    'May' : 'Mai',
+    'Jun' : 'Juin',
+    'Jul' : 'Juillet',
+    'Aug' : 'Aout',
+    'Sep' : 'Septembre',
+    'Oct' : 'Octobre',
+    'Nov' : 'Novembre',
+    'Dec' : 'Decembre'
+}
+%}
+
+<div class="body-home">
+    <div class="page-acceuil m-3">
+        <div class="text-acceuil m-auto">
+            {% for children in user.childrens %}
+                {% if children.ateliers|length >0 %}
+                <div class="inscription-date">
+                    <p>{{children.name}} {{children.firstname}}<p/>
+                </div>
+                    {% for atelier in children.ateliers %}
+                        <div class="card-atelier card-inscription" href="{{ path('site_atelier',{'atelier':atelier.id})}}">
+                            <div class="date-atelier">
+                                <p>
+                                    {{ day[atelier.date|date("w")] }}
+                                </p>
+                                <h1>{{ atelier.date|date("d") }}</h1>
+                                <p>
+                                    {{ month[atelier.date|date("M")] }}
+                                </p>
+                            </div>
+                            <div class="date-atelier-2">
+                                <p>
+                                    {{ atelier.hourStart|date("H:i") }}
+                                </p>
+                                <p>-</p>
+                                <p>
+                                    {{ atelier.hourStop|date("H:i") }}
+                                </p>
+                            </div>
+                            <div class="corp-atelier corp-inscription">
+                                <p class='title-atelier'>{{ atelier.name }}</p>
+                                <p class='description-atelier'>{{ atelier.description }}</p>
+                                <p class='author-atelier'>{{ atelier.intervenant.firstname }}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}        
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

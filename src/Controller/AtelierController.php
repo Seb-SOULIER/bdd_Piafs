@@ -686,7 +686,7 @@ class AtelierController extends AbstractController
 
             $entityManager->flush();
             
-            return $this->redirectToRoute('site_list_atelier', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('site_inscriptions', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('atelier/inscription.html.twig', [
@@ -694,4 +694,21 @@ class AtelierController extends AbstractController
             'form'=>$form->createView()
         ]);
     }
+
+    #[Route('/inscriptions', name: 'site_inscriptions')]
+    public function siteInscriptions(UserRepository $userRepository): Response
+    {
+        $user= $this->getUser();
+
+        if (null === $user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+
+        return $this->render('atelier/mes_inscriptions.html.twig', [
+            'user'=>$user
+        ]);
+
+    } 
 }

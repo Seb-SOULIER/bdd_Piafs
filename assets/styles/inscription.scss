@@ -1,0 +1,23 @@
+.inscription-date{
+    margin: 2rem;
+    margin-bottom: 0.2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    border-top: 2px solid $colorLogo1;
+    border-bottom: 2px solid $colorLogo1;
+    background-color: $colorLogo2;
+    p{
+        margin-bottom: 0;
+        text-align: center;
+        font-weight: bold;
+        font-size:0.9rem;
+    }
+}
+
+.card-inscription{
+    margin-inline: 2rem;
+}
+
+.corp-inscription{
+    width:75% !important;
+}
