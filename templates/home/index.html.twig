@@ -18,7 +18,7 @@
 				</div>
 			</a>
 		</div>
-		{% if app.user %}
+		 {% if is_granted('ROLE_INTER') or is_granted('ROLE_ADMIN') %}
 			<p class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>
 		{% endif %}
 

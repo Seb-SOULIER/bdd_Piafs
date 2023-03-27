@@ -16,6 +16,12 @@
 
 .card-inscription{
     margin-inline: 2rem;
+    .text-error{
+        margin: 1rem;
+        margin-inline: auto;
+        color: $colorLogo1;
+        font-weight: bold;
+    }
 }
 
 .corp-inscription{

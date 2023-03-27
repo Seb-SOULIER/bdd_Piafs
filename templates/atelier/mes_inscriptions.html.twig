@@ -35,37 +35,43 @@
     <div class="page-acceuil m-3">
         <div class="text-acceuil m-auto">
             {% for children in user.childrens %}
-                {% if children.ateliers|length >0 %}
+                {% if children.isActive %}
                 <div class="inscription-date">
                     <p>{{children.name}} {{children.firstname}}<p/>
                 </div>
-                    {% for atelier in children.ateliers %}
-                        <div class="card-atelier card-inscription" href="{{ path('site_atelier',{'atelier':atelier.id})}}">
-                            <div class="date-atelier">
-                                <p>
-                                    {{ day[atelier.date|date("w")] }}
-                                </p>
-                                <h1>{{ atelier.date|date("d") }}</h1>
-                                <p>
-                                    {{ month[atelier.date|date("M")] }}
-                                </p>
+                    {% if children.ateliers|length >0 %}
+                        {% for atelier in children.ateliers %}
+                            <div class="card-atelier card-inscription">
+                                <div class="date-atelier">
+                                    <p>
+                                        {{ day[atelier.date|date("w")] }}
+                                    </p>
+                                    <h1>{{ atelier.date|date("d") }}</h1>
+                                    <p>
+                                        {{ month[atelier.date|date("M")] }}
+                                    </p>
+                                </div>
+                                <div class="date-atelier-2">
+                                    <p>
+                                        {{ atelier.hourStart|date("H:i") }}
+                                    </p>
+                                    <p>-</p>
+                                    <p>
+                                        {{ atelier.hourStop|date("H:i") }}
+                                    </p>
+                                </div>
+                                <div class="corp-atelier corp-inscription">
+                                    <p class='title-atelier'>{{ atelier.name }}</p>
+                                    <p class='description-atelier'>{{ atelier.description }}</p>
+                                    <p class='author-atelier'>{{ atelier.intervenant.firstname }}</p>
+                                </div>
                             </div>
-                            <div class="date-atelier-2">
-                                <p>
-                                    {{ atelier.hourStart|date("H:i") }}
-                                </p>
-                                <p>-</p>
-                                <p>
-                                    {{ atelier.hourStop|date("H:i") }}
-                                </p>
-                            </div>
-                            <div class="corp-atelier corp-inscription">
-                                <p class='title-atelier'>{{ atelier.name }}</p>
-                                <p class='description-atelier'>{{ atelier.description }}</p>
-                                <p class='author-atelier'>{{ atelier.intervenant.firstname }}</p>
-                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card-atelier card-inscription">
+                            <h4 class="text-error">Pas d'inscription à un atelier pour {{children.firstname}}.</h4>
                         </div>
-                    {% endfor %}
+                    {% endif %}    
                 {% endif %}        
             {% endfor %}
         </div>
