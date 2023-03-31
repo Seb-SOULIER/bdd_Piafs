@@ -49,22 +49,25 @@
                    <p>Horaire : {{ atelier.hourStart|date('H:i') }} à {{ atelier.hourStop|date('H:i') }}</p>
             </div>
             <div class="card-actualite">
-                {{ form_start(form) }}
                 {% if form.childrens|length < 1 %}
                     <p>Vous n'avez pas d'adhérent validé par l'association</p>
                     <p>Merci de contacter les Piafs Actifs</p>
+                    <div class="d-flex flex-row-reverse">
+                        <a class="btn button1" href="{{ path('site_list_atelier') }}">RETOUR</a>
+                    </div>
                 {% else %}
-                    {{ form_widget(form.childrens) }}
+                    {{ form_start(form) }}
+                        {{ form_widget(form.childrens) }}
+                        <div class="inscription-comment">
+                            {{ form_label(form.comment,"Remarque/Message poour l'intervenant :(facultatif)") }}
+                            {{ form_widget(form.comment) }}   
+                        </div>
+                        <div class="d-flex flex-row-reverse">
+                            <button class='btn button1'>RESERVER</button>
+                    {{ form_end(form) }}   
+                            <a class="btn button1" href="{{ path('site_list_atelier') }}">RETOUR</a>
+                        </div>
                 {% endif %}
-                <div class="inscription-comment">
-                    {{ form_label(form.comment,"Remarque/Message poour l'intervenant :(facultatif)") }}
-                    {{ form_widget(form.comment) }}   
-                </div>
-                <div class="d-flex flex-row-reverse">
-                    <button class='btn button1'>RESERVER</button>
-                {{ form_end(form) }}   
-                    <a class="btn button1" href="{{ path('site_list_atelier') }}">RETOUR</a>
-                </div>
             </div>
         </div>
     </div>

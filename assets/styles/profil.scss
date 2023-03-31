@@ -27,3 +27,26 @@
     font-weight: bold;
     color:$colorLogo3;
 }
+
+.title-profil-2 {
+    text-align: end !important;
+    width:20%;
+    margin-right:1rem;
+    font-weight: bold;
+}
+
+.title-profil-3 {
+    text-align: end !important;
+    width:20%;
+    margin-right:1rem;
+    color:$colorLogo5;
+}
+
+.round-pink{
+    background-color: $colorLogo3;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    color: white !important;
+}

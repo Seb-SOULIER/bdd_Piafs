@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Atelier index{% endblock %}
+
+{% block body %}
+    <h1>Atelier index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>HourStart</th>
+                <th>HourStop</th>
+                <th>Place</th>
+                <th>Description</th>
+                <th>PlaceReserved</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for atelier in ateliers %}
+            <tr>
+                <td>{{ atelier.id }}</td>
+                <td>{{ atelier.name }}</td>
+                <td>{{ atelier.date ? atelier.date|date('Y-m-d') : '' }}</td>
+                <td>{{ atelier.hourStart ? atelier.hourStart|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ atelier.hourStop ? atelier.hourStop|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ atelier.place }}</td>
+                <td>{{ atelier.description }}</td>
+                <td>{{ atelier.placeReserved }}</td>
+                <td>
+                    <a href="{{ path('app_crud_atelier_show', {'id': atelier.id}) }}">show</a>
+                    <a href="{{ path('app_crud_atelier_edit', {'id': atelier.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_crud_atelier_new') }}">Create new</a>
+{% endblock %}

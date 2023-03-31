@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Atelier{% endblock %}
+
+{% block body %}
+<div class="body-home">
+    <div class="page-acceuil m-3">
+        <div class="text-acceuil m-auto">
+            <h1 class="text-center">Modifier l'atelier</h1>
+            <div class="d-flex">
+                <img class="img-profil" src="{{asset('/build/avatar_piafs/')}}{{app.user.avatar}}" title="avatar Piafs Actifs" alt="avatar Piafs Actifs" height="150px">
+                <div class="w-50 d-flex m-auto flex-column" >
+                    <h4 style="font-weight: bold">
+                        {{ app.user.lastname }} {{ app.user.firstname }}
+                    </h4>
+                    <p>
+                        {{ app.user.email }}
+                    </p>
+                    <p>
+                        {% if app.user.roles|json_encode == '["ROLE_ADMIN"]' %}
+                            Administrateur
+                        {% else %}
+                            Intervenant
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <div class="card-actualite">
+                {{ include('atelierInter/_form.html.twig', {'button_label': 'ENREGISTRER'}) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

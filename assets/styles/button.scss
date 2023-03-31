@@ -10,3 +10,17 @@
 .button1:hover{
     background-color: $colorLogo1;
 }
+
+.button2{
+    text-decoration: none;
+    color:white;
+    background-color: $colorLogo4;
+    align-items: center;
+    width:45%;
+    margin-inline: auto;
+}
+
+.button2:hover{
+    color:white;
+    background-color: $colorLogo3;
+}

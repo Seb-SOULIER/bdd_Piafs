@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Atelier;
+use App\Entity\Children;
 use App\Entity\Comment;
-use App\Form\InscriptionType;
+use App\Form\AtelierType;
 use App\Repository\AtelierRepository;
 use App\Repository\ChildrenRepository;
 use App\Repository\CommentRepository;
@@ -16,10 +17,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Length;
 
 class AtelierController extends AbstractController
 {
@@ -711,4 +712,163 @@ class AtelierController extends AbstractController
         ]);
 
     } 
+
+    #[Route('/atelier/inter/list', name: 'site_list_inter_atelier')]
+    public function siteListInterAtelier(   AtelierRepository $atelierRepository,
+                                            UserRepository $userRepository
+                                            ): Response
+    {   
+        $now = new DateTime('now');
+        $now->sub(new DateInterval('P1D'));
+
+        $userConnect = $this->getUser();
+        
+        if (null === $userConnect) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user = $userRepository->findOneBy(['id'=>$this->getUser()]);
+
+        if ($user->getRoles() == ['ROLE_ADMIN']){
+            $ateliers = $atelierRepository->findByAdmin();
+        }else{
+            $ateliers = $atelierRepository->findByInter($user);
+        }
+
+        return $this->render('atelierInter/index.html.twig', [
+            'listAteliers' => $ateliers
+        ]);
+    }
+
+    #[Route('/atelier/inter/new', name: 'crud_atelier_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, AtelierRepository $atelierRepository): Response
+    {
+        $atelier = new Atelier();
+        $form = $this->createForm(AtelierType::class, $atelier);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $dateAtelier = $form->getData()->getDate();
+            $hourStart = $form->getData()->getHourStart();
+            $hourStop = $form->getData()->getHourStop();
+
+            $hourStart->setDate($dateAtelier->format('Y'), $dateAtelier->format('m'), $dateAtelier->format('d'));
+            $hourStop->setDate($dateAtelier->format('Y'), $dateAtelier->format('m'), $dateAtelier->format('d'));
+
+            $atelier->setHourStart($hourStart);
+            $atelier->setHourStop($hourStop);
+
+            $atelier->setIntervenant($this->getUser());
+
+            $ateliersMemeJour = $atelierRepository->findBy(['date' => $dateAtelier]);
+
+            foreach($ateliersMemeJour as $atelierMemeJour){
+                if( (($atelier->getHourStart() >= $atelierMemeJour->getHourStart()) && ($atelier->getHourStart() <  $atelierMemeJour->getHourStop())) or (($atelier->getHourStop() > $atelierMemeJour->getHourStart()) && ($atelier->getHourStop() <=  $atelierMemeJour->getHourStop()) )){
+                    $this->addFlash('danger','Impossible d\'ajouter l\'atelier '. $atelier->getName() . ', il est en même temp que l\'atelier '. $atelierMemeJour->getName(). ' qui a lieu de : ' . $atelierMemeJour->getHourStart()->format('H:i') . ' à '. $atelierMemeJour->getHourStop()->format('H:i'));
+
+                    return $this->renderForm('atelierInter/new.html.twig', [
+                        'atelier' => $atelier,
+                        'form' => $form,
+                    ]);
+                }
+            }
+
+            $atelierRepository->save($atelier, true);
+            $this->addFlash('success','Atelier '. $atelier->getName() . ' ajouté avec succés.' );
+
+            return $this->redirectToRoute('site_list_inter_atelier', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('atelierInter/new.html.twig', [
+            'atelier' => $atelier,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/atelier/inter/{id}/edit', name: 'crud_atelier_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Atelier $atelier, AtelierRepository $atelierRepository): Response
+    {
+        $form = $this->createForm(AtelierType::class, $atelier);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            
+            $dateAtelier = $form->getData()->getDate();
+            $hourStart = $form->getData()->getHourStart();
+            $hourStop = $form->getData()->getHourStop();
+
+            $hourStart->setDate($dateAtelier->format('Y'), $dateAtelier->format('m'), $dateAtelier->format('d'));
+            $hourStop->setDate($dateAtelier->format('Y'), $dateAtelier->format('m'), $dateAtelier->format('d'));
+
+            $atelier->setHourStart($hourStart);
+            $atelier->setHourStop($hourStop);
+
+            $atelier->setIntervenant($this->getUser());
+
+            $ateliersMemeJour = $atelierRepository->findBy(['date' => $dateAtelier]);
+
+            $ateliersMemeJour = array_filter($ateliersMemeJour, function ($element) use ($atelier) {
+                return $element !== $atelier;
+            });
+
+            foreach($ateliersMemeJour as $atelierMemeJour){
+                if( (($atelier->getHourStart() >= $atelierMemeJour->getHourStart()) && ($atelier->getHourStart() <  $atelierMemeJour->getHourStop())) or (($atelier->getHourStop() > $atelierMemeJour->getHourStart()) && ($atelier->getHourStop() <=  $atelierMemeJour->getHourStop()) )){
+                    $this->addFlash('danger','Impossible d\'ajouter l\'atelier '. $atelier->getName() . ', il est en même temp que l\'atelier '. $atelierMemeJour->getName(). ' qui a lieu de : ' . $atelierMemeJour->getHourStart()->format('H:i') . ' à '. $atelierMemeJour->getHourStop()->format('H:i'));
+
+                    return $this->renderForm('atelierInter/new.html.twig', [
+                        'atelier' => $atelier,
+                        'form' => $form,
+                    ]);
+                }
+            }
+
+            $atelierRepository->save($atelier, true);
+            $this->addFlash('success','Atelier '. $atelier->getName() . ' modifié avec succés.' );
+
+            return $this->redirectToRoute('site_list_inter_atelier', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('atelierInter/edit.html.twig', [
+            'atelier' => $atelier,
+            'form' => $form,
+        ]);
+    }
+
+    #[Route('/atelier/inter/profil/{id}/atelier/{atelier}', name: 'crud_atelier_profil', methods: ['GET', 'POST'])]
+    public function profil(Children $children,Atelier $atelier, UserRepository $userRepository): Response
+    {
+        $user = $userRepository->findOneBy(['id' => $children->getParent()]);
+    
+        return $this->renderForm('atelierInter/profil.html.twig', [
+            'user'=>$user,
+            'children'=>$children,
+            'atelier'=>$atelier
+        ]);
+    }
+
+    #[Route('/atelier/inter/{atelier}/desinscription/{children}', name: 'crud_atelier_unsubscrible', methods: ['GET', 'POST'])]
+    public function uunsubscible(Atelier $atelier, Children $children, AtelierRepository $atelierRepository): Response
+    {
+        $atelier->removeParticipant($children);
+        $atelier->setPlaceReserved(count($atelier->getParticipants()));
+        $atelierRepository->save($atelier, true);
+
+        $this->addFlash('success', $children->getName() .' '. $children->getFirstname(). ' n\'est plus inscrit à l\'atelier ' . $atelier->getName() . '.' );
+               
+        return $this->redirectToRoute('site_list_inter_atelier', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/atelier/inter/delete/{atelier}', name: 'crud_atelier_delete', methods: ['GET', 'POST'])]
+    public function delete(Atelier $atelier, AtelierRepository $atelierRepository): Response
+    {
+        if (count($atelier->getParticipants()) > 0 ){
+            $this->addFlash('danger', 'Il y a des inscrits à l\'atelier, il est donc impossible de le supprimer.' );
+            return $this->redirectToRoute('site_list_inter_atelier', [], Response::HTTP_SEE_OTHER);            
+        }
+
+        $this->addFlash('success', 'Atelier supprimé avec succés' );
+        return $this->redirectToRoute('site_list_inter_atelier', [], Response::HTTP_SEE_OTHER);
+    }
+
 }

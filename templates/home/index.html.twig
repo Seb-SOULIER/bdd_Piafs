@@ -6,6 +6,7 @@
 {% block body %}
 
 	<div class="body-home">
+		{% if app.request.headers.get('User-Agent') matches '/Android/i' and app.request.headers.get('User-Agent') matches '/Mobile/i' %}
 		<div class="mobile">
 			<a id='countUpload' class="card-android" href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">
 				<img style="height:100%; width:auto" class="card-img-top" src="{{ asset('build/images/android.png') }}" alt="android app">
@@ -18,8 +19,6 @@
 				</div>
 			</a>
 		</div>
-		 {% if is_granted('ROLE_INTER') or is_granted('ROLE_ADMIN') %}
-			<p class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>
 		{% endif %}
 
 		<div class="no-mobile">
@@ -34,6 +33,10 @@
 				</div>
 			</div>
 		</div>
+		
+		{% if is_granted('ROLE_INTER') or is_granted('ROLE_ADMIN') %}
+			<p class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>
+		{% endif %}
 
 		<div class="page-acceuil">
 			<img class="img-page-acceuil" src="{{ asset('build/images/child.jpeg') }}" alt="piafs Actifs">

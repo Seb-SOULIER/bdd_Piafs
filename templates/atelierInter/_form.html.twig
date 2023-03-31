@@ -1,0 +1,31 @@
+{{ form_start(form) }}
+    <div class="d-flex">
+        <p class='title-profil'>Nom de l'atelier :</p>
+        <p class='text-profil'>{{ form_widget(form.name) }}</p>
+    </div>
+    <div class="d-flex">
+        <p class='title-profil'>Description de l'atelier :</p>
+        <p class='text-profil'>{{ form_widget(form.description) }}</p>
+    </div>
+    <div class="d-flex">
+        <p class='title-profil'>Date de l'atelier :</p>
+        <p class='text-profil'>{{ form_widget(form.date) }}</p>
+    </div>
+        <div class="d-flex" style="align-items:baseline">
+        <p class='title-profil'>Heure de début :</p>
+        <p class='text-profil'>{{ form_widget(form.hourStart) }}</p>
+    </div>
+    <div class="d-flex">
+        <p class='title-profil'>Heure de fin :</p>
+        <p class='text-profil'>{{ form_widget(form.hourStop) }}</p>
+    </div>
+    <div class="d-flex">
+        <p class='title-profil'>Nombre de place :</p>
+        <p class='text-profil'>{{ form_widget(form.place) }}</p>
+    </div>
+    
+    <div class="d-flex flex-row-reverse">
+        <button class='btn button1'>{{ button_label|default('ENREGISTRER') }}</button>
+{{ form_end(form) }}   
+        <a class="btn button1" href="{{ path('site_list_inter_atelier') }}">RETOUR</a>
+    </div>
