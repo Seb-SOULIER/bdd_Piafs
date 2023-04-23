@@ -26,8 +26,10 @@ class RegistrationController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $user = new User();
-        $user->setFirstname($data['firstname']);
-        $user->setLastname($data['lastname']);
+        if ($data['firstname'] and $data['lastname']){
+            $user->setFirstname($data['firstname']);
+            $user->setLastname($data['lastname']);
+        }
         $user->setEmail($data['email']);
         $user->setPassword(
             $userPasswordHasher->hashPassword(
