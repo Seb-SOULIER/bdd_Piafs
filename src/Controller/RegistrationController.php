@@ -300,7 +300,7 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
-                    $form->get('plainPassword')->getData()
+                    $form->get('password')->getData()
                 )
             );
             $user->setAvatar(rand(1,15).".png");
@@ -312,7 +312,7 @@ class RegistrationController extends AbstractController
             
             $authenticatorManager->authenticateUser($user, $authenticator, $request);
 
-            return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_profil_edit', [], Response::HTTP_SEE_OTHER);
 
         }
 

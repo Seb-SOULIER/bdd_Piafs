@@ -2,16 +2,17 @@
 
 namespace App\Controller;
 
-use App\Repository\ChildrenRepository;
+use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\ActiveUser;
-use DateInterval;
-use DateTime;
+use App\Form\ResetPasswordFormType;
+use App\Form\RestorePasswordFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -117,4 +118,88 @@ class ApiLoginController extends AbstractController
         // controller can be blank: it will never be called!
         throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
+
+
+    #[Route('/login/restore/send', name: 'send_restore_password')]
+    public function sendRestorePassword(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserRepository $userRepository,
+        MailerInterface $mailer,
+        ): Response
+    {   
+        
+        $form = $this->createForm(ResetPasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $userRepository->findOneBy(['email'=>$form->getData('email')]);
+
+            $image = base64_encode(file_get_contents($this->getParameter('kernel.project_dir') . '/assets/images/logo_les_piafs_actifs.png'));
+
+            if($user){
+                $user-> setRestoreCode(random_int(100000, 999999));
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                $email = (new TemplatedEmail())
+                    ->from('les_piafs_actifs@cod4y.fr')
+                    ->to($user->getEmail())
+                    ->subject('Reinitialisation du mot de passe')
+                    ->htmlTemplate('email/resetPassword.html.twig')
+                    ->context(compact('user','image'));
+                $mailer->send($email);
+
+                $this->addFlash('success','Mail avec code pour réinitialiser le mot de passe envoyé');
+
+                return $this->redirectToRoute('restore_password', ['user'=> $user->getId()], Response::HTTP_SEE_OTHER);
+
+            } else {
+                $this->addFlash('danger','Ce mail n\'est pas enregistré');
+            }
+        }
+        
+        return $this->render('registration/registerPassword.html.twig', [
+            'resetForm' => $form->createView(),
+        ]);
+    }
+
+
+    #[Route('/login/restore/{user}', name: 'restore_password')]
+    public function restorePassword(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        User $user
+        ): Response
+    {   
+        $form = $this->createForm(RestorePasswordFormType::class);
+        $form->handleRequest($request);
+
+
+        if ($user->getRestoreCode()){
+            if ($form->isSubmitted() && $form->isValid()) {
+                if($user->getRestoreCode() == $form->getData()['code']){
+                    $user->setPassword(
+                        $userPasswordHasher->hashPassword(
+                            $user,
+                            $form->getData()['password']
+                        )
+                    );
+                    $user->setRestoreCode(Null);
+                    $entityManager->persist($user);
+                    $entityManager->flush();
+
+                    $this->addFlash('success','Mot de passe réinitialisé avec succès');
+
+                    return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+                }
+                $this->addFlash('danger','Le code est incorrecte!');
+            }   
+        }
+        
+        return $this->render('registration/restorePassword.html.twig', [
+            'restoreForm' => $form->createView(),
+        ]);
+    }    
 }
