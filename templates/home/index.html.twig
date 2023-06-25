@@ -8,8 +8,8 @@
 	<div class="body-home">
 		{% if app.request.headers.get('User-Agent') matches '/Android/i' and app.request.headers.get('User-Agent') matches '/Mobile/i' %}
 		<div class="mobile">
-			<a id='countUpload' class="card-android" href="https://www.application.lespiafsactifs.fr/build/app/Piafs_Actifs.apk" download="Piafs_Actifs.apk">
-				<img style="height:8vw; width:auto" class="card-img-top" src="{{ asset('build/images/android.png') }}" alt="android app">
+			<a id='countUpload' class="card-android" href="https://play.google.com/store/apps/details?id=com.sebapp.App_Piafs">
+				<img style="height:8vw; width:auto" class="card-img-top" src="{{ asset('build/images/Google_Play.png') }}" alt="android app">
 				<div class="card-body-android">
 					<h5 class="card-title-android text-center">Télécharger l'App</h5>
 					<p class="card-text-android">Télécharger l'application des Piafs Actifs (v1.04)</p>
@@ -20,33 +20,12 @@
 			</a>
 		</div>
 		{% else %}
-		<div class="mobile">
-			<a id='countUpload' class="card-android" href="#" download="Piafs_Actifs.apk">
-				<div class="card-body-android">
-					<h5 class="card-title-android text-center mt-5">Découvrir les ateliers</h5>
-					<p class="card-text-android">Découvrez nos ateliers et inscrivez-vous grâce au menu en haut à droite</p>
-					<p class="card-text-android text-end m-3">
-						<small class="text-muted">Cod4y</small>
-					</p>
-				</div>
-				<img style="height:8vh; width:auto" class="card-img-top" src="{{ asset('build/images/arrow-up-right.svg') }}" alt="android app">
-			</a>
+		<div class="mobile" style="display: flex; justify-content: center;">
+			<a href="{{ path('site_list_atelier') }}" class="nav-link button-menu" style="margin: 1rem; padding: 1rem;">
+				<h2 class="mb-0">Nos ateliers</h2>
+			</a> 
 		</div>
-
 		{% endif %}
-
-		<div class="no-mobile">
-			<div class="card-android">
-				<img style="height:8vh; width:auto" class="card-img-top" src="{{ asset('build/images/android.png') }}" alt="android app">
-				<div class="card-body-android">
-					<h5 class="card-title-android text-center">Rendez-vous sur smartphone</h5>
-					<p class="card-text-android">Rendez-vous sur smartphone pour télécharger l'application mobile.</p>
-					<p class="card-text-android text-end mt-3">
-						<small class="text-muted">Cod4y</small>
-					</p>
-				</div>
-			</div>
-		</div>
 		
 		{% if is_granted('ROLE_INTER') or is_granted('ROLE_ADMIN') %}
 			<p class="text-center"><small>L'application a été téléchargée {{ countUpload.countUploadApp }} fois</small></p>

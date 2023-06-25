@@ -8,6 +8,7 @@ use App\Form\RegistrationFormType;
 use App\Repository\ChildrenRepository;
 use App\Repository\UserRepository;
 use App\Security\LoginAuthenticator;
+use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -162,7 +163,13 @@ class RegistrationController extends AbstractController
         $children = new Children();
         $children->setName(strtoupper($data['name']));
         $children->setFirstname($data['firstname']);
-        $children->setIsActive(false);
+
+        // compte actif d'office
+        $children->setIsActive(True);
+        $date = new \DateTime();
+        $date->add(new DateInterval('P1Y'));
+        $child->setActiveAt($date);
+        // $children->setIsActive(false);
         
         $mydate = getDate(strtotime($data['birthdate']));
         $date = new \DateTime();

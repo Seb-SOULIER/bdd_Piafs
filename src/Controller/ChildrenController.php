@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Children;
 use App\Form\ChildrenType;
 use App\Repository\ChildrenRepository;
+use DateInterval;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +33,15 @@ class ChildrenController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $child->setParent($user);
-            $child->setIsActive(false);
+
+            $child->setIsActive(True);
+
+            $date = new \DateTime();
+            $date->add(new DateInterval('P1Y'));
+
+            $child->setActiveAt($date);
+
+            // $child->setIsActive(false);
             $childrenRepository->save($child, true);
 
             return $this->redirectToRoute('app_profil', [], Response::HTTP_SEE_OTHER);
