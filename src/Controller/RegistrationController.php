@@ -168,7 +168,7 @@ class RegistrationController extends AbstractController
         $children->setIsActive(True);
         $date = new \DateTime();
         $date->add(new DateInterval('P1Y'));
-        $child->setActiveAt($date);
+        $children->setActiveAt($date);
         // $children->setIsActive(false);
         
         $mydate = getDate(strtotime($data['birthdate']));
